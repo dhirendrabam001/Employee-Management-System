@@ -1,0 +1,174 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.full-layout {
+  width: 100%;
+}
+.hero-section {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.banner-content {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  padding: 180px 60px;
+  color: #fff;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
+}
+
+/* Gradient Animation */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Glow Effects */
+.banner-content::before,
+.banner-content::after {
+  content: "";
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: rgba(0, 183, 255, 0.25);
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+  animation: float 8s infinite ease-in-out;
+}
+
+.banner-content::before {
+  top: -80px;
+  left: -80px;
+}
+
+.banner-content::after {
+  bottom: -80px;
+  right: -80px;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(40px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.banner-content h2 {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.banner-content p {
+  color: #d1d1d1;
+  font-weight: 400;
+  margin-top: 20px;
+  line-height: 1.8;
+  font-size: 17px;
+  max-width: 500px;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary {
+  background: #4f46e5;
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+}
+
+.btn-primary:hover {
+  background: #6366f1;
+  transform: translateY(-2px);
+}
+
+/* banner right */
+.banner-right h2 {
+  font-size: 40px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.banner-right span {
+  color: #6366f1;
+}
+.banner-right p {
+  color: grey;
+}
+.btn-info {
+  margin-top: 40px;
+}
+.banner-button {
+  margin: 15px 0px;
+}
+
+.banner-btn {
+  background: #eef2ff;
+  padding: 25px;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  width: 100%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.banner-btn:hover {
+  border: 1px solid #4f46e5;
+  background: #f5f7ff;
+}
+.btn-title h6 {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.banner-btn:hover .btn-title h6 {
+  color: #4f46e5;
+  transform: translateX(5px);
+}
+
+.fa-arrow {
+  color: grey;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.banner-btn:hover .fa-arrow {
+  color: #4f46e5;
+  transform: translateX(8px);
+}
+.next-info {
+  margin-top: 30px;
+}
+.next-info p {
+  color: grey;
+  font-size: 16px;
+}
