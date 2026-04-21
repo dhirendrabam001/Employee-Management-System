@@ -4,7 +4,7 @@ import { TbLockPassword } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-const Password = () => {
+const EmployeePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   return (
@@ -45,7 +45,7 @@ const Password = () => {
           <div className="login-btn py-2">
             <button
               type="submit"
-              onClick={() => navigate("/admin/verify")}
+              onClick={() => navigate("/verify")}
               className="btn btn-primary w-100"
             >
               Sign in
@@ -70,4 +70,4 @@ const Password = () => {
   );
 };
 
-export default Password;
+export default EmployeePassword;

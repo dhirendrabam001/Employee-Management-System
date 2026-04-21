@@ -14,7 +14,7 @@ const BannerRight = () => {
           <div className="banner-button">
             <button
               className="banner-btn d-flex align-items-center justify-content-between"
-              onClick={() => navigate("/admin/portal")}
+              onClick={() => navigate("/admin/login")}
             >
               <div className="admin-main d-flex gap-3 align-items-center justify-content-center">
                 <div className="icon-info">
@@ -38,7 +38,7 @@ const BannerRight = () => {
           <div className="banner-button">
             <button
               className="banner-btn d-flex align-items-center justify-content-between"
-              onClick={() => navigate("/admin/portal")}
+              onClick={() => navigate("/employee/login")}
             >
               <div className="admin-main d-flex gap-3 align-items-center justify-content-center">
                 <div className="icon-info">

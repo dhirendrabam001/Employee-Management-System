@@ -7,13 +7,13 @@ import { FiUserPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-const SignUp = () => {
+const EmployeeSignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="d-flex justify-content-center align-items-center login-main mt-3">
       <div className="card">
         <h2 className="mb-2 fs-2">
-          Create An Admin <span>Account!</span>
+          Create An Employee <span>Account!</span>
         </h2>
         <p className="text-muted">Fill in the details to get started</p>
 
@@ -23,7 +23,6 @@ const SignUp = () => {
             <input
               type="text"
               className="form-control ps-5"
-              name="fullName"
               placeholder="Enter Your Full Name"
             />
             <FaRegUser className="form-icon fs-6" />
@@ -32,7 +31,6 @@ const SignUp = () => {
             <label className="form-label">Email Address</label>
             <input
               type="email"
-              name="email"
               className="form-control ps-5"
               placeholder="admin@example.com"
             />
@@ -43,7 +41,6 @@ const SignUp = () => {
             <input
               type={showPassword ? "text" : "password"}
               className="form-control ps-5"
-              name="password"
               placeholder="Create a password"
             />
             <TbLockPassword className="form-icon" />
@@ -59,8 +56,7 @@ const SignUp = () => {
           <div className="mb-3 position-relative">
             <label className="form-label">Phone Number</label>
             <input
-              type="text"
-              name="phoneNumber"
+              type="number"
               className="form-control ps-5"
               placeholder="Enter your phone number"
             />
@@ -77,13 +73,13 @@ const SignUp = () => {
           <div className="login-btn">
             <button type="submit" className="btn btn-primary w-100">
               <FiUserPlus className="mb-1 me-3 fs-5" />
-              Create An Admin Account
+              Create An Employee Account
             </button>
           </div>
         </form>
         <p className="text-center mt-3 text-muted">
           Already have an account?
-          <Link className="ms-2" to="/admin/login">
+          <Link className="ms-2" to="/employee/login">
             Sign in
           </Link>
         </p>
@@ -92,4 +88,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default EmployeeSignUp;

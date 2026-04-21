@@ -2,7 +2,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { CgMail } from "react-icons/cg";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const EmployeeLogin = () => {
   const navigate = useNavigate();
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 login-main">
@@ -25,7 +25,7 @@ const Login = () => {
           <div className="login-btn">
             <button
               type="submit"
-              onClick={() => navigate("/admin/password")}
+              onClick={() => navigate("/employee/password")}
               className="btn btn-primary w-100"
             >
               Continue
@@ -34,7 +34,7 @@ const Login = () => {
         </form>
         <p className="text-center mt-3 text-muted">
           Don’t have an account?
-          <Link className="ms-2" to="/admin/signup">
+          <Link className="ms-2" to="/employee/signup">
             Sign up
           </Link>
         </p>
@@ -43,4 +43,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default EmployeeLogin;

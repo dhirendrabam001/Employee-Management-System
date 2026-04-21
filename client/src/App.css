@@ -274,3 +274,38 @@
 .password-input input {
   margin-top: 5px;
 }
+
+/* verify-card */
+.verify-icons .icons {
+  font-size: 50px;
+  color: white;
+  margin-bottom: 20px;
+  background: blue;
+  padding: 15px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+.verify-heading h5 {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.verify-heading span {
+  color: #6366f1;
+}
+.btn-title button {
+  border: 1px solid #c4c4e9;
+  background: #eef2ff;
+  padding: 10px;
+  border-radius: 8px;
+  color: blue;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 0.5s ease all;
+  font-size: 13px !important;
+}
+.btn-title button:hover {
+  transform: translateX(8px);
+}
