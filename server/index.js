@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 
 // require everyting
 require("dotenv").config();
@@ -9,6 +10,7 @@ const app = express();
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser);
 
 // all routes
 const userRoutes = require("./routes/user.routes");
