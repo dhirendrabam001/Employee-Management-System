@@ -6,14 +6,14 @@ const register = async (req, res) => {
   //   check first all field are required
   if (!fullName || !email || !password || !phoneNumber || !role) {
     return res
-      .status(404)
+      .status(400)
       .json({ success: false, message: "Please All Field Are Required!" });
   }
   //   check email user and database store email
   const existingEmail = await User.findOne({ email });
   if (existingEmail) {
     return res
-      .status(404)
+      .status(400)
       .json({ success: false, message: "Email Already Exits" });
   }
 
@@ -36,30 +36,62 @@ const register = async (req, res) => {
   });
 };
 
+// checkEmail
+const checkEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // check email field or not
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please All Field Are Required" });
+    }
+
+    // find email in database
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Email verified" });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 // login controller
 const login = async (req, res) => {
   const { email, password } = req.body;
 
-  // all field are required
+  // ✅ validation
   if (!email || !password) {
-    return res
-      .status(404)
-      .json({ success: false, message: "Please All Field Are Required" });
+    return res.status(400).json({
+      success: false,
+      message: "Password are required",
+    });
   }
-  // check email exit or not database
+
+  // ✅ find user
   const user = await User.findOne({ email });
   if (!user) {
-    return res
-      .status(404)
-      .json({ success: false, message: "User does not found" });
+    return res.status(400).json({
+      success: false,
+      message: "User not found",
+    });
   }
 
   // compare password and hashpassword
   const comparePassword = await bcrypt.compare(password, user.password);
   if (!comparePassword) {
     return res
-      .status(404)
-      .json({ success: false, messge: "Password does not matched" });
+      .status(400)
+      .json({ success: false, message: "Password does not matched" });
   }
 
   // jwt used
@@ -72,7 +104,9 @@ const login = async (req, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "None",
+    path: "/", // VERY IMPORTANT
+    maxAge: 24 * 60 * 60 * 1000,
   });
 
   res.status(200).json({
@@ -83,4 +117,4 @@ const login = async (req, res) => {
   });
 };
 
-module.exports = { register, login };
+module.exports = { register, checkEmail, login };

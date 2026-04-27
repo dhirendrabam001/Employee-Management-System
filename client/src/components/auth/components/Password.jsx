@@ -3,10 +3,58 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { USER_API_END_POINT } from "../../../utils/constantUrl";
+import { toast } from "react-toastify";
+import { showError } from "../../../utils/toast";
+import { setUser } from "../../../redux/authSlice";
 
 const Password = () => {
+  const { email } = useSelector((store) => store.auth);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [input, setInput] = useState({
+    password: "",
+  });
+
+  const changeHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const promise = axios.post(
+        `${USER_API_END_POINT}/login`,
+        { email, password: input.password },
+        {
+          withCredentials: true,
+        },
+      );
+
+      toast.promise(promise, {
+        pending: "Redirect...",
+        success: "Redirect Successfully",
+        error: {
+          render({ data }) {
+            return data?.response?.data?.message || "Invalid credentials ❌";
+          },
+        },
+      });
+
+      const res = await promise;
+      if (res.data.success) {
+        dispatch(setUser(res.data));
+        navigate("/admin/verify");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="d-flex justify-content-center align-items-center password-card">
       <div className="card shadow">
@@ -18,19 +66,22 @@ const Password = () => {
         </div>
         <div className="d-flex align-items-center justify-content-between py-4">
           <div className="password-heading">
-            <h6>example@gmail.com</h6>
+            <h6>{email}</h6>
           </div>
           <div className="password-edit">
             <Link className="edit">Edit</Link>
           </div>
         </div>
 
-        <form>
+        <form onSubmit={submitHandler}>
           <div className="mb-3 position-relative">
             <label className="form-label">Password</label>
             <input
               type={showPassword ? "text" : "password"}
               className="form-control ps-5"
+              onChange={changeHandler}
+              name="password"
+              value={input.password}
               placeholder="Create a password"
             />
             <TbLockPassword className="form-icon" />
@@ -43,11 +94,7 @@ const Password = () => {
             </span>
           </div>
           <div className="login-btn py-2">
-            <button
-              type="submit"
-              onClick={() => navigate("/admin/verify")}
-              className="btn btn-primary w-100"
-            >
+            <button type="submit" className="btn btn-primary w-100">
               Sign in
             </button>
           </div>

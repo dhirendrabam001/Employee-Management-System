@@ -25,6 +25,7 @@ export const showPromise = (promise, messages) => {
     success: {
       render({ data }) {
         console.log("✅ API SUCCESS:", data);
+
         return messages?.success || "Success!";
       },
     },
