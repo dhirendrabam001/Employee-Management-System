@@ -1,17 +1,28 @@
 const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
-  const token = req.headers.authorization;
-  console.log("auth", token);
+  try {
+    const token = req.cookies.token;
+    console.log("token", token);
 
-  //   check token access or not
-  if (!token) {
+    // check token access nor not
+    if (!token) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Accessed Denied" });
+    }
+
+    // verify token
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.user = decoded;
+    next();
+    console.log("decoded", decoded);
+  } catch (error) {
+    console.error(error);
     return res
-      .status(401)
-      .json({ success: false, message: "Token accessed denied" });
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
   }
-  const decoded = jwt.verify(token, process.env.SECRET_KEY);
-  console.log("Decoded", decoded);
 };
 
 module.exports = auth;

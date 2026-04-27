@@ -1,6 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./App.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import HeroSection from "./features/home/pages/HeroSection";
 import { Route, Routes } from "react-router-dom";
@@ -16,6 +18,16 @@ import EmployeeSignUpSection from "./components/auth/pages/EmployeeSignUpSection
 function App() {
   return (
     <div className="full-layout">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="dark"
+      />
       <Routes>
         <Route path="/" element={<HeroSection />}></Route>
         <Route path="/admin/login" element={<LoginSection />}></Route>

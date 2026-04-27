@@ -49,7 +49,9 @@ const login = async (req, res) => {
   // check email exit or not database
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status({ success: false, message: "User does not found" });
+    return res
+      .status(404)
+      .json({ success: false, message: "User does not found" });
   }
 
   // compare password and hashpassword
