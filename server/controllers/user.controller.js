@@ -39,21 +39,21 @@ const register = async (req, res) => {
 // checkEmail
 const checkEmail = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, role } = req.body;
 
     // check email field or not
-    if (!email) {
+    if (!email || !role) {
       return res
         .status(400)
         .json({ success: false, message: "Please All Field Are Required" });
     }
 
     // find email in database
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, role });
     if (!user) {
       return res
         .status(400)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: `${role} is not found this email` });
     }
 
     return res.status(200).json({ success: true, message: "Email verified" });
@@ -67,10 +67,10 @@ const checkEmail = async (req, res) => {
 
 // login controller
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
   // ✅ validation
-  if (!email || !password) {
+  if (!email || !password || !role) {
     return res.status(400).json({
       success: false,
       message: "Password are required",
@@ -78,11 +78,11 @@ const login = async (req, res) => {
   }
 
   // ✅ find user
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email, role });
   if (!user) {
     return res.status(400).json({
       success: false,
-      message: "User not found",
+      message: `${role} is not found,`,
     });
   }
 

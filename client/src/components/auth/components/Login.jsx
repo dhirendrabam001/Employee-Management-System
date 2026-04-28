@@ -24,15 +24,26 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const promise = axios.post(`${USER_API_END_POINT}/checkEmail`, input, {
-        withCredentials: true,
-      });
+      const promise = axios.post(
+        `${USER_API_END_POINT}/checkEmail`,
+        {
+          email: input.email,
+          role: "admin",
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
       // loading success error
       toast.promise(promise, {
         pending: "Checking email...",
         success: "Email verified",
-        error: "Email not found",
+        error: {
+          render({ data }) {
+            return data?.response?.data?.message || "Email not verified";
+          },
+        },
       });
 
       const res = await promise;

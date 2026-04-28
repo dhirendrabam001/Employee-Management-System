@@ -8,9 +8,6 @@ const Banner = () => {
           employees, tracking performance, and improving organizational
           efficiency.
         </p>
-        <button className="btn btn-primary btn btn-primary mt-4">
-          Get Started
-        </button>
       </div>
     </>
   );

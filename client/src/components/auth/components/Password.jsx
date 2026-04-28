@@ -29,15 +29,19 @@ const Password = () => {
     try {
       const promise = axios.post(
         `${USER_API_END_POINT}/login`,
-        { email, password: input.password },
+        {
+          email,
+          password: input.password,
+          role: "admin",
+        },
         {
           withCredentials: true,
         },
       );
 
       toast.promise(promise, {
-        pending: "Redirect...",
-        success: "Redirect Successfully",
+        pending: "Checking password...",
+        success: "Login Successfully",
         error: {
           render({ data }) {
             return data?.response?.data?.message || "Invalid credentials ❌";
@@ -47,8 +51,8 @@ const Password = () => {
 
       const res = await promise;
       if (res.data.success) {
-        dispatch(setUser(res.data));
-        navigate("/admin/verify");
+        dispatch(setUser(res.data.user));
+        navigate("/verify");
       }
     } catch (error) {
       console.error(error);

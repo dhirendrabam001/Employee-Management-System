@@ -6,9 +6,42 @@ import { IoCallOutline } from "react-icons/io5";
 import { FiUserPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { showPromise } from "../../../utils/toast";
+import axios from "axios";
+import { USER_API_END_POINT } from "../../../utils/constantUrl";
 
 const EmployeeSignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [input, setInput] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+    role: "employee",
+  });
+
+  const changeHander = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await showPromise(
+        axios.post(`${USER_API_END_POINT}/register`, input, {
+          withCredentials: true,
+        }),
+        {
+          pending: "Account Creating...",
+          success: "Account Create Successfully!",
+          error: "Faile to create account",
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="d-flex justify-content-center align-items-center login-main mt-3">
       <div className="card">
@@ -17,11 +50,14 @@ const EmployeeSignUp = () => {
         </h2>
         <p className="text-muted">Fill in the details to get started</p>
 
-        <form>
+        <form onSubmit={submitHandler}>
           <div className="mb-3 position-relative">
             <label className="form-label">Full Name</label>
             <input
               type="text"
+              name="fullName"
+              value={input.fullName}
+              onChange={changeHander}
               className="form-control ps-5"
               placeholder="Enter Your Full Name"
             />
@@ -31,8 +67,11 @@ const EmployeeSignUp = () => {
             <label className="form-label">Email Address</label>
             <input
               type="email"
+              name="email"
+              value={input.email}
+              onChange={changeHander}
               className="form-control ps-5"
-              placeholder="admin@example.com"
+              placeholder="employee@example.com"
             />
             <CgMail className="form-icon" />
           </div>
@@ -41,6 +80,9 @@ const EmployeeSignUp = () => {
             <input
               type={showPassword ? "text" : "password"}
               className="form-control ps-5"
+              name="password"
+              value={input.password}
+              onChange={changeHander}
               placeholder="Create a password"
             />
             <TbLockPassword className="form-icon" />
@@ -56,14 +98,22 @@ const EmployeeSignUp = () => {
           <div className="mb-3 position-relative">
             <label className="form-label">Phone Number</label>
             <input
-              type="number"
+              type="text"
+              name="phoneNumber"
+              value={input.phoneNumber}
+              onChange={changeHander}
               className="form-control ps-5"
               placeholder="Enter your phone number"
             />
             <IoCallOutline className="form-icon" />
           </div>
           <div className="form-check mb-3">
-            <input type="checkbox" className="form-check-input" id="remember" />
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="remember"
+              required
+            />
             <label className="form-check-label" htmlFor="remember">
               I agree to the <span>Terms & Condition</span> and
               <span className="ms-2">Privacy Policy</span>
