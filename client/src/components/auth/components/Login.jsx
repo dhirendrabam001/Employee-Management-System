@@ -57,7 +57,7 @@ const Login = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 login-main">
+    <div className="d-flex justify-content-center align-items-center login-main">
       <div className="card">
         <h2 className="text-center mb-2">
           Welcome <span>Back 👋</span>
@@ -65,7 +65,7 @@ const Login = () => {
         <p className="text-center text-muted">Sign in to your account</p>
 
         <form onSubmit={submitHandler}>
-          <div className="mb-3 position-relative">
+          <div className="mb-3 position-relative email-address">
             <label className="form-label">Email Address</label>
             <input
               type="email"

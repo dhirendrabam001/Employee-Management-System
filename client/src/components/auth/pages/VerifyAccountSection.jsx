@@ -3,12 +3,12 @@ import VerifyAccount from "../components/VerifyAccount";
 
 const VerifyAccountSection = () => {
   return (
-    <div className="hero-section">
-      <div className="row align-items-center g-0 h-100">
-        <div className="col-12 col-md-6 col-lg-6 d-flex align-items-center justify-content-center bg-light">
+    <div className="verify-section">
+      <div className="row w-100 align-items-center m-0">
+        <div className="col-12 col-md-12 col-lg-6 d-flex align-items-center justify-content-center bg-light d-none d-md-block">
           <Banner />
         </div>
-        <div className="col-12 col-md-6 col-lg-6 d-none d-md-block">
+        <div className="col-12 col-md-12 col-lg-6">
           <VerifyAccount />
         </div>
       </div>

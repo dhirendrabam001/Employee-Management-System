@@ -1,0 +1,112 @@
+@media (max-width: 575.98px) {
+  .banner-content {
+    height: 70vh;
+    padding: 144px 60px;
+  }
+  .banner-right {
+    padding: 30px;
+  }
+  .banner-content h2 {
+    font-size: 44px;
+  }
+  .login-main {
+    padding: 35px 0px;
+    margin-top: 0px !important;
+  }
+  .password-card {
+    margin-top: 20px;
+  }
+  .verify-card {
+    margin-top: 50px;
+  }
+  .verify-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .banner-content {
+    height: 70vh;
+    padding: 144px 60px;
+  }
+  .banner-right {
+    padding: 30px;
+  }
+  .banner-content h2 {
+    font-size: 44px;
+  }
+  .login-main {
+    padding: 35px 0px;
+    margin-top: 0px !important;
+  }
+  .password-card {
+    margin-top: 20px;
+  }
+  .verify-card {
+    margin-top: 50px;
+  }
+  .verify-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .banner-content {
+    height: 88vh;
+  }
+  .banner-right {
+    padding: 30px;
+  }
+  .banner-content h2 {
+    font-size: 60px;
+  }
+  .login-main {
+    padding: 35px 0px;
+    margin-top: 0px !important;
+  }
+  .password-card {
+    margin-top: 20px;
+  }
+  .password-card .card {
+    width: 100%;
+    max-width: 700px;
+  }
+  .verify-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .banner-content h2 {
+    font-size: 40px;
+    margin-top: 24px;
+  }
+  .email-address {
+    padding: 10px;
+  }
+  .form-icon {
+    top: 68%;
+  }
+  .login-btn {
+    padding: 0px 10px;
+  }
+  .form-check .form-check-input {
+    float: left;
+    margin: 4px;
+  }
+  .login-main .card h2 {
+    margin-left: 14px;
+  }
+  .login-main .card p {
+    margin-left: 14px;
+  }
+}

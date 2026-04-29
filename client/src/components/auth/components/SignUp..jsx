@@ -49,7 +49,7 @@ const SignUp = () => {
         <p className="text-muted">Fill in the details to get started</p>
 
         <form onSubmit={submitHandler}>
-          <div className="mb-3 position-relative">
+          <div className="mb-3 position-relative email-address">
             <label className="form-label">Full Name</label>
             <input
               type="text"
@@ -61,7 +61,7 @@ const SignUp = () => {
             />
             <FaRegUser className="form-icon fs-6" />
           </div>
-          <div className="mb-3 position-relative">
+          <div className="mb-3 position-relative email-address">
             <label className="form-label">Email Address</label>
             <input
               type="email"
@@ -73,7 +73,7 @@ const SignUp = () => {
             />
             <CgMail className="form-icon" />
           </div>
-          <div className="mb-3 position-relative">
+          <div className="mb-3 position-relative email-address">
             <label className="form-label">Password</label>
             <input
               type={showPassword ? "text" : "password"}
@@ -93,7 +93,7 @@ const SignUp = () => {
             </span>
           </div>
 
-          <div className="mb-3 position-relative">
+          <div className="mb-3 position-relative email-address">
             <label className="form-label">Phone Number</label>
             <input
               type="text"
@@ -105,7 +105,7 @@ const SignUp = () => {
             />
             <IoCallOutline className="form-icon" />
           </div>
-          <div className="form-check mb-3">
+          <div className="form-check mb-3 email-address">
             <input
               type="checkbox"
               className="form-check-input"
