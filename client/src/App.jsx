@@ -14,9 +14,9 @@ import VerifyAccountSection from "./components/auth/pages/VerifyAccountSection";
 import EmployeeLoginSection from "./components/auth/pages/EmployeeLoginSection";
 import EmployeePasswordSection from "./components/auth/pages/EmployeePasswordSection";
 import EmployeeSignUpSection from "./components/auth/pages/EmployeeSignUpSection";
-import AdminDashboard from "./features/home/pages/AdminDashboard";
-import EmployeeDashboard from "./features/home/pages/EmployeeDashboard";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
+import AdminDashboard from "./components/features/admin/pages/AdminDashboard";
+import EmployeeDashboard from "./components/features/employee/pages/EmployeeDashboard";
 
 function App() {
   return (

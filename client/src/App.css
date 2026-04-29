@@ -310,3 +310,93 @@
 .btn-title button:hover {
   transform: translateX(8px);
 }
+
+/* admin dashboard sidebar */
+.dashboard-main {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.sidebar-main {
+  background: #050c1f;
+  width: 100%;
+  min-height: 100vh;
+  padding: 50px 0px;
+}
+.icon-dashboard .icon {
+  font-size: 30px;
+  font-weight: bold;
+}
+.sidebar-content h6 {
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  margin: 3px 0px !important;
+}
+.sidebar-content p {
+  font-size: 12px;
+  color: #a4a4a4;
+  margin: 0px 0px !important;
+}
+.dashboard-card {
+  background: #171e32;
+  padding: 10px;
+  border: 1px solid #3d3d3f;
+  border-radius: 8px;
+}
+.dashobard-heading span {
+  background: #1d293d;
+  padding: 8px 14px;
+  border: 1px solid #5f5d5d;
+  border-radius: 8px;
+  font-weight: bold;
+  color: chartreuse;
+}
+.dashobard-heading h6 {
+  margin: 0px 0px !important;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.dashobard-heading p {
+  margin: 3px 0px !important;
+  font-size: 13px;
+  color: #afacac;
+}
+.main-sidebar h6 {
+  font-size: 12px;
+  font-weight: bold;
+  color: grey;
+  margin: 12px 5px;
+}
+.nav-link {
+  color: #c7c4c4;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-top: 6px;
+}
+
+.nav-link:hover {
+  background-color: #192045;
+  color: #fff;
+}
+
+.nav-link.active {
+  background-color: #1d293d;
+  color: #c7c4c4;
+  font-weight: 600;
+  font-size: 14px;
+}
+.logout-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logout-btn button {
+  border: none;
+  color: grey;
+}
+/* end */
