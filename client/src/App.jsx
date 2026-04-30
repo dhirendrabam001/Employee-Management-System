@@ -4,6 +4,7 @@ import "./App.css";
 import "./Responsive.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
 
 import HeroSection from "./features/home/pages/HeroSection";
 import { Route, Routes } from "react-router-dom";
@@ -17,8 +18,34 @@ import EmployeeSignUpSection from "./components/auth/pages/EmployeeSignUpSection
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import AdminDashboard from "./components/features/admin/pages/AdminDashboard";
 import EmployeeDashboard from "./components/features/employee/pages/EmployeeDashboard";
+import { useEffect } from "react";
+import axios from "axios";
+import { USER_API_END_POINT } from "./utils/constantUrl";
+import { setUser } from "./redux/authSlice";
+import { showError } from "./utils/toast";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`${USER_API_END_POINT}/me`, {
+          withCredentials: true,
+        });
+
+        dispatch(setUser(res.data.user));
+      } catch (error) {
+        console.error(error);
+        dispatch(setUser(null));
+        if (error.response?.status === 401) {
+          showError("Session expired, please login again!");
+        }
+      }
+    };
+    fetchUser();
+  }, []);
+
   return (
     <div className="full-layout">
       <ToastContainer

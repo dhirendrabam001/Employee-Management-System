@@ -5,6 +5,11 @@ import { useEffect } from "react";
 const ProtectedRoutes = ({ children, role }) => {
   const { user } = useSelector((store) => store.auth);
 
+  // don't redirect immediately on null
+  if (user === null) {
+    return null; // wait for useEffect to run
+  }
+
   if (!user) {
     if (role === "admin") {
       return <Navigate to="/admin/login"></Navigate>;

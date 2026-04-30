@@ -117,4 +117,37 @@ const login = async (req, res) => {
   });
 };
 
-module.exports = { register, checkEmail, login };
+// refresh token
+const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Issue" });
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      path: "/",
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Issue" });
+  }
+};
+
+module.exports = { register, checkEmail, login, getMe, logout };

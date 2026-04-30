@@ -316,6 +316,7 @@
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
+  background: #fbfcfc;
 }
 .sidebar-main {
   background: #050c1f;
@@ -363,7 +364,7 @@
   font-size: 13px;
   color: #afacac;
 }
-.main-sidebar h6 {
+.sidebar-main h6 {
   font-size: 12px;
   font-weight: bold;
   color: grey;
@@ -390,13 +391,48 @@
   font-weight: 600;
   font-size: 14px;
 }
-.logout-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.logout-btn button {
-  border: none;
-  color: grey;
-}
+
 /* end */
+
+/* admin dashboard css */
+.dashboard-right {
+  padding: 50px 0px;
+}
+.admin-card .card-info {
+  background: #ffff;
+  padding: 30px 20px;
+  border-radius: 8px;
+  border: 1px solid #ececec;
+  transition: 0.4s ease all;
+  border-left: 5px solid #afa6a6;
+}
+.admin-card .card-info:hover {
+  transform: translateY(-10px);
+  border: 1px solid #d4cae5;
+  border-left: 5px solid #6f42c1;
+}
+.admin-card h2 {
+  font-size: 30px;
+  font-weight: 600;
+  color: #050c1f;
+  letter-spacing: 1px;
+  margin: 2px 0px !important;
+}
+.admin-card p {
+  font-size: 14px;
+  margin: 0px 0px !important;
+  color: #6c6767;
+  font-weight: 500 !important;
+}
+.card-heading h6 {
+  font-weight: 600;
+  color: #0f0c29;
+}
+.card-icon .icon-user {
+  background: #eeeded;
+  width: 40px;
+  border-radius: 8px;
+  color: #5f5f5f;
+  height: 40px;
+  padding: 9px;
+}
