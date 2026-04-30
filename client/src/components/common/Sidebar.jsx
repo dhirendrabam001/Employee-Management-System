@@ -59,7 +59,7 @@ const Sidebar = () => {
       path: "/admin/dashboard",
       icon: <MdOutlineDashboardCustomize />,
     },
-    { name: "Employee", path: "/admin/employee", icon: <FaUserPlus /> },
+    { name: "Employees", path: "/admin/employees", icon: <FaUserPlus /> },
     { name: "Leave", path: "/admin/leave", icon: <FaNoteSticky /> },
     { name: "Payslips", path: "/admin/payslips", icon: <HiCurrencyDollar /> },
     { name: "Setting", path: "/admin/setting", icon: <MdSettings /> },

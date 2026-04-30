@@ -16,13 +16,13 @@ import EmployeeLoginSection from "./components/auth/pages/EmployeeLoginSection";
 import EmployeePasswordSection from "./components/auth/pages/EmployeePasswordSection";
 import EmployeeSignUpSection from "./components/auth/pages/EmployeeSignUpSection";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
-import AdminDashboard from "./components/features/admin/pages/AdminDashboard";
-import EmployeeDashboard from "./components/features/employee/pages/EmployeeDashboard";
 import { useEffect } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "./utils/constantUrl";
 import { setUser } from "./redux/authSlice";
 import { showError } from "./utils/toast";
+import Dashboard from "./components/features/admin/pages/Dashboard";
+import Employees from "./components/features/admin/pages/Employees";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,10 +36,9 @@ function App() {
 
         dispatch(setUser(res.data.user));
       } catch (error) {
-        console.error(error);
         dispatch(setUser(null));
         if (error.response?.status === 401) {
-          showError("Session expired, please login again!");
+          showError(error?.data?.response?.message);
         }
       }
     };
@@ -64,7 +63,7 @@ function App() {
           path="/admin/dashboard"
           element={
             <ProtectedRoutes role="admin">
-              <AdminDashboard />
+              <Dashboard />
             </ProtectedRoutes>
           }
         ></Route>
@@ -72,6 +71,9 @@ function App() {
         <Route path="/admin/signup" element={<SignUpSection />}></Route>
         <Route path="/admin/password" element={<PasswordSection />}></Route>
         <Route path="/verify" element={<VerifyAccountSection />}></Route>
+
+        {/* admin pages */}
+        <Route path="/admin/employees" element={<Employees />}></Route>
 
         {/* employee routes */}
         <Route
@@ -82,7 +84,7 @@ function App() {
           path="/employee/dashboard"
           element={
             <ProtectedRoutes role="employee">
-              <EmployeeDashboard />
+              <Dashboard />
             </ProtectedRoutes>
           }
         ></Route>

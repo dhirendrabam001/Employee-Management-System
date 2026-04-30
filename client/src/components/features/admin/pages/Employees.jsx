@@ -1,7 +1,6 @@
 import Sidebar from "../../../common/Sidebar";
-import AdminCard from "../../../ui/AdminCard";
-
-const AdminDashboard = () => {
+import EmployeesDetails from "../components/EmployeesDetails";
+const Employees = () => {
   return (
     <div className="dashboard-main">
       <div className="row">
@@ -10,7 +9,7 @@ const AdminDashboard = () => {
         </div>
         <div className="col-12 col-md-10 col-lg-10">
           <div className="dashboard-right">
-            <AdminCard />
+            <EmployeesDetails />
           </div>
         </div>
       </div>
@@ -18,4 +17,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default Employees;
