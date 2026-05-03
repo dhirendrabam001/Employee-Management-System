@@ -676,3 +676,126 @@
 .select-custom__option--is-focused {
   background: rgba(111, 66, 193, 0.1) !important;
 }
+.employee-search {
+  margin-top: 30px;
+}
+.employee-seach-input {
+  position: relative;
+}
+.employee-seach-input input {
+  width: 100%;
+  padding: 10px 40px;
+  border: 1px solid #f4f1f1;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #635a5a;
+  outline: none;
+}
+.employee-seach-input input:hover {
+  border: 1px solid #6f42c1;
+}
+.employee-seach-input .serach-icons {
+  position: absolute;
+  left: 0;
+  font-size: 18px;
+  margin-top: 16px;
+  margin-left: 11px;
+}
+.employee-card {
+  margin-top: 30px;
+}
+.user-card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  max-width: 280px;
+  position: relative;
+  transition: 0.5s ease all;
+}
+.user-card:hover {
+  transform: translateY(-5px);
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+/* Show on hover */
+.user-card:hover .overlay {
+  opacity: 1;
+}
+
+/* Buttons */
+.icon-btn {
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.edit {
+  background: #0d6efd;
+}
+
+.delete {
+  background: #dc3545;
+}
+
+.card-header-section {
+  background-color: #eef1f5;
+  height: 140px;
+  position: relative;
+}
+
+.department-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: blue !important;
+  letter-spacing: 1px;
+  font-weight: bold !important;
+}
+
+.avatar-circle {
+  width: 70px;
+  height: 70px;
+  background-color: #dbe4ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  position: relative;
+  top: 35px;
+}
+
+.initials {
+  font-weight: 600;
+  color: #5a67d8;
+  font-size: 20px;
+}
+
+.user-card .card-body {
+  padding-top: 30px;
+}
+.user-card .card-body h5 {
+  color: #414347;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
