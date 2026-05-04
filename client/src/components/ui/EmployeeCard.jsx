@@ -10,7 +10,9 @@ import { HiCurrencyDollar } from "react-icons/hi2";
 
 const EmployeeCard = () => {
   const { user } = useSelector((store) => store.auth);
-  const formatRole = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1);
+  const formatRole = user?.role
+    ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+    : "";
   return (
     <div className="admin-card">
       <div className="container">

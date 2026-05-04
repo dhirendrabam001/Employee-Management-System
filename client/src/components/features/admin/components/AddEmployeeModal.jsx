@@ -99,7 +99,7 @@ const AddEmployeeModal = () => {
                     <div className="col-12 col-md-6 col-lg-6 mb-1">
                       <label>Position</label>
                       <input
-                        type="number"
+                        type="text"
                         className="form-control custom-input"
                       />
                     </div>

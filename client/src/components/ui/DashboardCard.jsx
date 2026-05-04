@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 const DashboardCard = () => {
   const { user } = useSelector((store) => store.auth);
-  const formatRole = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1);
+  const formatRole = user?.role
+    ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+    : "";
   const firstLetter = user?.fullName?.charAt(0).toUpperCase();
 
   return (
