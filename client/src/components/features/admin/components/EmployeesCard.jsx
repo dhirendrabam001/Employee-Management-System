@@ -1,6 +1,6 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 const EmployeesCard = () => {
-  const EmployeesCard = [1, 2, 3, 4, 5];
+  const EmployeesCard = [1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <div className="row align-items-center g-4">
       {EmployeesCard.map((item, index) => {
