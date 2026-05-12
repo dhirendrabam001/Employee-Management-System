@@ -81,4 +81,27 @@ const employee = async (req, res) => {
   }
 };
 
-module.exports = { employee };
+// get all employee list
+const getEmployeeAll = async (req, res) => {
+  try {
+    const employee = await Employee.find().select("-password"); //hide password for security -password
+    if (!employee) {
+      return res
+        .status()
+        .json({ success: false, message: "Employee does not found!" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      employee,
+      message: "Employee fetched successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error!" });
+  }
+};
+
+module.exports = { employee, getEmployeeAll };

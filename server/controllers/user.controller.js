@@ -101,9 +101,11 @@ const login = async (req, res) => {
     { expiresIn: "1h" },
   );
 
+  // console.log(token);
+
   res.cookie("token", token, {
     httpOnly: true,
-    secure: true,
+    secure: false,
     sameSite: "None",
     path: "/", // VERY IMPORTANT
     maxAge: 60 * 60 * 1000,
