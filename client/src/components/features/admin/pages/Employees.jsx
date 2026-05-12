@@ -1,6 +1,8 @@
+import useGetEmployee from "../../../../hooks/useGetEmployee";
 import Sidebar from "../../../common/Sidebar";
 import EmployeesDetails from "../components/EmployeesDetails";
 const Employees = () => {
+  useGetEmployee();
   return (
     <div className="dashboard-main">
       <div className="row">

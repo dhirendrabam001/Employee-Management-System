@@ -81,4 +81,11 @@ const employee = async (req, res) => {
   }
 };
 
-module.exports = { employee };
+const getAllEmployee = async (req, res) => {
+  try {
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+module.exports = { employee, getAllEmployee };
