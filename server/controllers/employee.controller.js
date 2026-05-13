@@ -81,4 +81,29 @@ const employee = async (req, res) => {
   }
 };
 
-module.exports = { employee };
+// GET ALL EMPLOYEE DETAILS
+const getAllEmployeeList = async (req, res) => {
+  try {
+    // all employee data
+    const employee = await Employee.find().select("-password");
+
+    if (!employee) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Employee is not fetched" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      employee,
+      message: "Employee data is not fetched",
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+module.exports = { employee, getAllEmployeeList };
