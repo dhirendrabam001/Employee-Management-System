@@ -2,9 +2,11 @@ import Sidebar from "../../../common/Sidebar";
 import AdminCard from "../../../ui/AdminCard";
 import { useSelector } from "react-redux";
 import EmployeeCard from "../../../ui/EmployeeCard";
+import useGetEmployee from "../../../../hooks/useGetEmployee";
 
 const Dashboard = () => {
   const { user } = useSelector((store) => store.auth);
+  useGetEmployee();
 
   return (
     <div className="dashboard-main">

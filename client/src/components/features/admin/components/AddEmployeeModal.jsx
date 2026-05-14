@@ -1,9 +1,13 @@
+import axios from "axios";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import Select from "react-select";
+import { EMPLOYEE_API_END_POINT } from "../../../../utils/constantUrl";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setEmployee } from "../../../../redux/employeeSlice";
 const AddEmployeeModal = () => {
-  const [department, setDepartment] = useState(null);
-  const [role, setRole] = useState(null);
+  const dispatch = useDispatch();
 
   const options = [
     { value: "1", label: "Engineering" },
@@ -22,6 +26,60 @@ const AddEmployeeModal = () => {
     { value: "1", label: "Admin" },
     { value: "2", label: "Employee" },
   ];
+
+  const [input, setInput] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    date: "",
+    bio: "",
+    department: "",
+    position: "",
+    salary: "",
+    allowance: "",
+    deduction: "",
+    email: "",
+    password: "",
+    role: "",
+  });
+
+  const changeHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e) => {
+    console.log("Input data", input);
+    e.preventDefault();
+
+    try {
+      const promise = axios.post(
+        `${EMPLOYEE_API_END_POINT}/addEmployee`,
+        input,
+        {
+          withCredentials: true,
+        },
+      );
+
+      toast.promise(promise, {
+        pending: "Added new employee",
+        success: "Employee added successfully",
+        error: {
+          render({ data }) {
+            return (
+              data?.response?.data?.message || "Employee data is not added"
+            );
+          },
+        },
+      });
+
+      const res = await promise;
+      if (res.data.success) {
+        dispatch(setEmployee(res.data.employee));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div
@@ -48,26 +106,50 @@ const AddEmployeeModal = () => {
             <div className="form-section custom-section">
               <h6 className="section-title">Personal Information</h6>
               <hr className="add-hr" />
-              <form action="">
+              <form onSubmit={submitHandler}>
                 <div className="row mt-3 align-items-center g-4">
                   <div className="col-12 col-md-6 col-lg-6 mb-1">
                     <label>First Name</label>
-                    <input type="text" className="form-control custom-input" />
+                    <input
+                      type="text"
+                      className="form-control custom-input"
+                      name="firstName"
+                      value={input.firstName}
+                      onChange={changeHandler}
+                    />
                   </div>
 
                   <div className="col-12 col-md-6 col-lg-6 mb-1">
                     <label>Last Name</label>
-                    <input type="text" className="form-control custom-input" />
+                    <input
+                      type="text"
+                      className="form-control custom-input"
+                      name="lastName"
+                      value={input.lastName}
+                      onChange={changeHandler}
+                    />
                   </div>
 
                   <div className="col-12 col-md-6 col-lg-6 mb-1">
                     <label>Phone Number</label>
-                    <input type="text" className="form-control custom-input" />
+                    <input
+                      type="text"
+                      className="form-control custom-input"
+                      name="phone"
+                      value={input.phone}
+                      onChange={changeHandler}
+                    />
                   </div>
 
                   <div className="col-12 col-md-6 col-lg-6 mb-1">
                     <label>Join Date</label>
-                    <input type="date" className="form-control custom-input" />
+                    <input
+                      type="date"
+                      className="form-control custom-input"
+                      name="date"
+                      value={input.date}
+                      onChange={changeHandler}
+                    />
                   </div>
 
                   <div className="col-12 mb-1">
@@ -75,6 +157,9 @@ const AddEmployeeModal = () => {
                     <textarea
                       type="text"
                       className="form-control custom-input"
+                      name="bio"
+                      value={input.bio}
+                      onChange={changeHandler}
                       rows="3"
                     />
                   </div>
@@ -89,8 +174,13 @@ const AddEmployeeModal = () => {
                       <label htmlFor="department">Department</label>
                       <Select
                         options={options}
-                        value={department}
-                        onChange={(e) => setDepartment(e)}
+                        value={options.find(
+                          (option) => option.value === input.department,
+                        )}
+                        name="department"
+                        onChange={(selectOption) =>
+                          setInput({ ...input, department: selectOption.label })
+                        }
                         placeholder="Select Department"
                         classNamePrefix="select-custom"
                         menuPlacement="top"
@@ -101,6 +191,9 @@ const AddEmployeeModal = () => {
                       <input
                         type="text"
                         className="form-control custom-input"
+                        name="position"
+                        value={input.position}
+                        onChange={changeHandler}
                       />
                     </div>
                     <div className="col-12 col-md-6 col-lg-6 mb-1">
@@ -108,6 +201,9 @@ const AddEmployeeModal = () => {
                       <input
                         type="number"
                         className="form-control custom-input"
+                        name="salary"
+                        value={input.salary}
+                        onChange={changeHandler}
                       />
                     </div>
                     <div className="col-12 col-md-6 col-lg-6 mb-1">
@@ -115,6 +211,9 @@ const AddEmployeeModal = () => {
                       <input
                         type="number"
                         className="form-control custom-input"
+                        name="allowance"
+                        value={input.allowance}
+                        onChange={changeHandler}
                       />
                     </div>
                     <div className="col-12 col-md-6 col-lg-6 mb-1">
@@ -122,6 +221,9 @@ const AddEmployeeModal = () => {
                       <input
                         type="number"
                         className="form-control custom-input"
+                        name="deduction"
+                        value={input.deduction}
+                        onChange={changeHandler}
                       />
                     </div>
                   </div>
@@ -134,23 +236,36 @@ const AddEmployeeModal = () => {
                     <div className="col-12mb-1">
                       <label htmlFor="department">Work Email</label>
                       <input
-                        type="text"
+                        type="email"
                         className="form-control custom-input"
+                        name="email"
+                        value={input.email}
+                        onChange={changeHandler}
                       />
                     </div>
                     <div className="col-12 col-md-6 col-lg-6 mb-1">
                       <label>Temporary Password</label>
                       <input
-                        type="text"
+                        type="password"
                         className="form-control custom-input"
+                        name="password"
+                        value={input.password}
+                        onChange={changeHandler}
                       />
                     </div>
                     <div className="col-12 col-md-6 col-lg-6 mb-1">
                       <label>System Role</label>
                       <Select
                         options={systemRole}
-                        value={role}
-                        onChange={(e) => setRole(e)}
+                        value={options.find(
+                          (option) => option.value === input.role,
+                        )}
+                        onChange={(selectRole) =>
+                          setInput({
+                            ...input,
+                            role: selectRole.label.toLowerCase(),
+                          })
+                        }
                         placeholder="Select System Role"
                         classNamePrefix="select-custom"
                         menuPlacement="bottom"
@@ -158,16 +273,18 @@ const AddEmployeeModal = () => {
                     </div>
                   </div>
                 </div>
+                {/* FOOTER */}
+                <div className="modal-footer border-0">
+                  <button
+                    type="submit"
+                    className="create-btn d-flex align-items-center gap-2"
+                  >
+                    <FaPlus />
+                    Create New Employee
+                  </button>
+                </div>
               </form>
             </div>
-          </div>
-
-          {/* FOOTER */}
-          <div className="modal-footer border-0">
-            <button className="create-btn d-flex align-items-center gap-2">
-              <FaPlus />
-              Create New Employee
-            </button>
           </div>
         </div>
       </div>
