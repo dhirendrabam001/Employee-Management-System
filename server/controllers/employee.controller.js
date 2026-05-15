@@ -106,4 +106,28 @@ const getAllEmployeeList = async (req, res) => {
   }
 };
 
-module.exports = { employee, getAllEmployeeList };
+const getEmployeeById = async (req, res) => {
+  try {
+    const employeeId = req.params.id;
+
+    const employee = await Employee.findById(employeeId);
+    if (!employee) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Employee does not found!" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      employee,
+      message: "Employee data fetched successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+module.exports = { employee, getAllEmployeeList, getEmployeeById };
