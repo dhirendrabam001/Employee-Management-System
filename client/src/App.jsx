@@ -4,7 +4,7 @@ import "./App.css";
 import "./Responsive.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import HeroSection from "./features/home/pages/HeroSection";
 import { Route, Routes } from "react-router-dom";
@@ -23,9 +23,11 @@ import { setUser } from "./redux/authSlice";
 import { showError } from "./utils/toast";
 import Dashboard from "./components/features/admin/pages/Dashboard";
 import Employees from "./components/features/admin/pages/Employees";
+import Loader from "./components/common/Loader";
 
 function App() {
   const dispatch = useDispatch();
+  const { loading } = useSelector((store) => store.auth);
 
   useEffect(() => {
     const fetchUser = async () => {

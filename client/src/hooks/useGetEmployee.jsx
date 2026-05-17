@@ -16,9 +16,6 @@ const useGetEmployee = () => {
             withCredentials: true,
           },
         );
-
-        console.log("Employee Data:", res.data);
-
         if (res.data.success) {
           dispatch(setEmployee(res.data.employee));
         }

@@ -4,6 +4,99 @@
   box-sizing: border-box;
 }
 
+/* loader csss */
+/* loader.css */
+
+.loader-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Scene */
+.cube-scene {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+/* Cube */
+.cube {
+  position: absolute;
+  top: 35px;
+  left: 50%;
+  transform-style: preserve-3d;
+  transform: translateX(-50%);
+  animation: cubeFloat 2s ease-in-out infinite;
+}
+
+/* Faces */
+.cube-face {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+}
+
+.cube-top {
+  background: #c4b5fd;
+  transform: rotateX(60deg) rotateZ(45deg);
+}
+
+.cube-left {
+  background: #8b5cf6;
+  transform: rotateX(60deg) rotateZ(45deg) translateX(-45px) translateY(45px);
+}
+
+.cube-right {
+  background: #5b21b6;
+  transform: rotateX(60deg) rotateZ(45deg) translateX(45px) translateY(45px);
+}
+
+/* Shadow */
+.cube-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 95px;
+  height: 95px;
+  background: rgba(0, 0, 0, 0.08);
+  transform: translateX(-50%) rotate(45deg);
+  filter: blur(8px);
+
+  animation: shadowPulse 2s ease-in-out infinite;
+}
+
+@keyframes cubeFloat {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0px);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-20px);
+  }
+}
+
+@keyframes shadowPulse {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(45deg) scale(1);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: translateX(-50%) rotate(45deg) scale(0.7);
+    opacity: 0.08;
+  }
+}
+/* end loader */
 /* global */
 .employee-add-btn {
   display: inline-flex;
@@ -726,6 +819,7 @@
   opacity: 0;
   transition: 0.3s;
   z-index: 10;
+  /* pointer-events: none; */
 }
 
 /* Show on hover */
@@ -744,6 +838,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  /* pointer-events: auto; */
 }
 
 .edit {

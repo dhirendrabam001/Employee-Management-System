@@ -1,8 +1,54 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 import UpdateProfileModal from "./UpdateProdileModal";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  setEmployee,
+  setSelectedEmployeeId,
+} from "../../../../redux/employeeSlice";
+import axios from "axios";
+import { EMPLOYEE_API_END_POINT } from "../../../../utils/constantUrl";
+import { toast } from "react-toastify";
 const EmployeesCard = () => {
   const { employee } = useSelector((store) => store.employee);
+  const dispatch = useDispatch();
+  const handleEdit = (id) => {
+    dispatch(setSelectedEmployeeId(id));
+  };
+
+  const handleDelete = async (id) => {
+    console.log("id", id);
+
+    try {
+      const promise = axios.delete(
+        `${EMPLOYEE_API_END_POINT}/deleteEmployeeById/${id}`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      toast.promise(promise, {
+        pending: "Deleting...",
+        success: "Employee deleted successed",
+        error: {
+          render({ data }) {
+            return (
+              data?.response?.data?.message || "Something is wrong to delete"
+            );
+          },
+        },
+      });
+
+      const res = await promise;
+      if (res.data.success) {
+        const updateEmployee = employee.filter((item) => item._id !== id);
+        console.log("Before:", employee.length);
+        console.log("After:", updateEmployee.length);
+        dispatch(setEmployee(updateEmployee));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className="row align-items-center g-4">
@@ -16,17 +62,20 @@ const EmployeesCard = () => {
                     className="icon-btn edit"
                     data-bs-toggle="modal"
                     data-bs-target="#updateProfileModal"
+                    onClick={() => handleEdit(item?._id)}
                   >
                     <FaEdit />
                   </button>
+
                   <button
+                    type="button"
                     className="icon-btn delete"
                     onClick={() => {
-                      const ok = window.alert(
+                      const ok = window.confirm(
                         "Are you sure you want to delete this item?",
                       );
                       if (ok) {
-                        handleDelete();
+                        handleDelete(item?._id);
                       }
                     }}
                   >
@@ -46,7 +95,9 @@ const EmployeesCard = () => {
                 </div>
 
                 <div className="card-body text-start">
-                  <h5 className="mb-1 fw-semibold">{item.firstName}</h5>
+                  <h5 className="mb-1 fw-semibold">
+                    {`${item.firstName} ${item.lastName}`}
+                  </h5>
                   <p className="text-muted mb-0 small">{item.position}</p>
                 </div>
               </div>

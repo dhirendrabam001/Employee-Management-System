@@ -5,6 +5,7 @@ import { FaFileAlt } from "react-icons/fa";
 
 const AdminCard = () => {
   const { user } = useSelector((store) => store.auth);
+
   return (
     <div className="admin-card">
       <div className="container">

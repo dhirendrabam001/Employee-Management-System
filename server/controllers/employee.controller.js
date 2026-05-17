@@ -197,8 +197,6 @@ const updateEmployeeProfile = async (req, res) => {
         deduction: employee.deduction,
         status: employee.status,
         email: employee.email,
-        password: employee,
-        password,
         role: employee.role,
       },
       message: "Employee Profile Updated Successfully!",
@@ -212,9 +210,39 @@ const updateEmployeeProfile = async (req, res) => {
   }
 };
 
+const deleteEmployeeById = async (req, res) => {
+  try {
+    console.log("DELETE API HIT");
+    const employeeId = req.params.id;
+    console.log("first", employeeId);
+
+    // find employee
+    const employee = await Employee.findById(employeeId);
+    console.log("second", employee);
+
+    if (!employee) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Employee id does not found!" });
+    }
+
+    // delete employee
+    await Employee.findByIdAndDelete(employeeId);
+    return res
+      .status(200)
+      .json({ success: true, message: "Employee deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
 module.exports = {
   employee,
   getAllEmployeeList,
   getEmployeeById,
   updateEmployeeProfile,
+  deleteEmployeeById,
 };
