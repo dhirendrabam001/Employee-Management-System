@@ -24,6 +24,7 @@ import { showError } from "./utils/toast";
 import Dashboard from "./components/features/admin/pages/Dashboard";
 import Employees from "./components/features/admin/pages/Employees";
 import Loader from "./components/common/Loader";
+import Leave from "./components/features/admin/pages/Leave";
 
 function App() {
   const dispatch = useDispatch();
@@ -76,6 +77,7 @@ function App() {
 
         {/* admin pages */}
         <Route path="/admin/employees" element={<Employees />}></Route>
+        <Route path="/admin/leave" element={<Leave />}></Route>
 
         {/* employee routes */}
         <Route

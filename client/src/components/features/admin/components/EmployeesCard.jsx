@@ -9,7 +9,23 @@ import axios from "axios";
 import { EMPLOYEE_API_END_POINT } from "../../../../utils/constantUrl";
 import { toast } from "react-toastify";
 const EmployeesCard = () => {
-  const { employee } = useSelector((store) => store.employee);
+  const { employee, searchText, searchDepartment } = useSelector(
+    (store) => store.employee,
+  );
+
+  const filterEmployee = employee.filter((emp) => {
+    const matchSearch =
+      emp?.firstName?.toUpperCase().includes(searchText.toUpperCase()) ||
+      emp?.email?.toUpperCase().includes(searchText.toUpperCase());
+
+    const matchDepartment = searchDepartment
+      ? emp.department === searchDepartment.label
+      : true;
+    console.log("department", matchDepartment);
+
+    return matchSearch && matchDepartment;
+  });
+
   const dispatch = useDispatch();
   const handleEdit = (id) => {
     dispatch(setSelectedEmployeeId(id));
@@ -52,7 +68,7 @@ const EmployeesCard = () => {
   return (
     <>
       <div className="row align-items-center g-4">
-        {employee?.map((item, index) => {
+        {filterEmployee?.map((item, index) => {
           return (
             <div className="col-12 col-md-6 col-lg-3" key={item?._id}>
               <div className="card user-card">

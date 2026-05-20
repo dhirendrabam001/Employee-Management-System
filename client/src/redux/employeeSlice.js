@@ -5,6 +5,8 @@ const employeeSlice = createSlice({
     employee: [],
     selectedEmployeeId: null,
     singleEmployeeData: [],
+    searchText: "",
+    searchDepartment: null,
   },
   reducers: {
     setEmployee: (state, action) => {
@@ -16,10 +18,21 @@ const employeeSlice = createSlice({
     setSingleEmployeeData: (state, action) => {
       state.singleEmployeeData = action.payload;
     },
+    setSearchText: (state, action) => {
+      state.searchText = action.payload;
+    },
+    setSearchDepartment: (state, action) => {
+      state.searchDepartment = action.payload;
+    },
   },
 });
 
-export const { setEmployee, setSelectedEmployeeId, setSingleEmployeeData } =
-  employeeSlice.actions;
+export const {
+  setEmployee,
+  setSelectedEmployeeId,
+  setSingleEmployeeData,
+  setSearchText,
+  setSearchDepartment,
+} = employeeSlice.actions;
 
 export default employeeSlice.reducer;

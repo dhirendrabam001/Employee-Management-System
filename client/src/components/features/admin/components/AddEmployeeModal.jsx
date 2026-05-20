@@ -2,12 +2,16 @@ import axios from "axios";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 import { EMPLOYEE_API_END_POINT } from "../../../../utils/constantUrl";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setEmployee } from "../../../../redux/employeeSlice";
+// import Login from "../../../auth/components/Login";
 const AddEmployeeModal = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { employee } = useSelector((store) => store.employee);
 
   const options = [
     { value: "1", label: "Engineering" },
@@ -74,7 +78,15 @@ const AddEmployeeModal = () => {
 
       const res = await promise;
       if (res.data.success) {
-        dispatch(setEmployee(res.data.employee));
+        dispatch(setEmployee([...employee, res.data.employee]));
+        const modalEl = document.getElementById("addEmployeeModal");
+
+        if (window.bootstrap && modalEl) {
+          const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+          console.log(window.bootstrap);
+          modalInstance?.hide();
+        }
+        navigate("/admin/employees");
       }
     } catch (error) {
       console.error(error);

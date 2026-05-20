@@ -4,9 +4,16 @@ import AddEmployeeModal from "./AddEmployeeModal";
 import { CiSearch } from "react-icons/ci";
 import Select from "react-select";
 import EmployeesCard from "./EmployeesCard";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setSearchDepartment,
+  setSearchText,
+} from "../../../../redux/employeeSlice";
 
 const EmployeesDetails = () => {
-  const [department, setDepartment] = useState(null);
+  // const [department, setDepartment] = useState(null);
+  const dispatch = useDispatch();
+  const { searchDepartment } = useSelector((store) => store.employee);
   const options = [
     { value: "1", label: "Engineering" },
     { value: "2", label: "Human Resources" },
@@ -35,7 +42,11 @@ const EmployeesDetails = () => {
         <div className="row align-items-center g-4">
           <div className="col-12 col-md-10 col-lg-10">
             <div className="employee-seach-input">
-              <input type="text" placeholder="Search Employees..." />
+              <input
+                type="text"
+                onChange={(e) => dispatch(setSearchText(e.target.value))}
+                placeholder="Search Employees..."
+              />
               <CiSearch className="serach-icons" />
             </div>
           </div>
@@ -43,8 +54,8 @@ const EmployeesDetails = () => {
             <div className="select-search">
               <Select
                 options={options}
-                value={department}
-                onChange={(e) => setDepartment(e)}
+                value={searchDepartment}
+                onChange={(e) => dispatch(setSearchDepartment(e))}
                 placeholder="All Department"
                 classNamePrefix="select-custom"
                 menuPlacement="top"
