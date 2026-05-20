@@ -941,6 +941,10 @@
 }
 
 /* ===== Stats ===== */
+.leave-content p {
+  text-align: center !important;
+  color: grey;
+}
 .leave-stats {
   display: flex;
   gap: 14px;
@@ -982,16 +986,6 @@
 /* ===== Filters ===== */
 .leave-filters {
   margin-top: 20px;
-}
-
-.leave-filters input,
-.leave-filters select {
-  padding: 12px 14px;
-
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  font-size: 14px;
-  width: 100%;
 }
 
 .btn-primary {
