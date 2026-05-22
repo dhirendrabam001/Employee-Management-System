@@ -41,6 +41,6 @@ const payslipSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const payslips = mongoose.model("payslips", payslipSchema);
+const Payslips = mongoose.model("payslips", payslipSchema);
 
-module.exports = { payslips };
+module.exports = { Payslips };
