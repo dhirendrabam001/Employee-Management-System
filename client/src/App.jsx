@@ -26,6 +26,7 @@ import Employees from "./components/features/admin/pages/Employees";
 import Loader from "./components/common/Loader";
 import Leave from "./components/features/admin/pages/Leave";
 import Payslips from "./components/features/admin/pages/Payslips";
+import PrintPayslip from "./components/features/admin/components/PrintPayslip";
 
 function App() {
   const dispatch = useDispatch();
@@ -80,6 +81,7 @@ function App() {
         <Route path="/admin/employees" element={<Employees />}></Route>
         <Route path="/admin/leave" element={<Leave />}></Route>
         <Route path="/admin/payslips" element={<Payslips />}></Route>
+        <Route path="/admin/payslip/print" element={<PrintPayslip />}></Route>
 
         {/* employee routes */}
         <Route

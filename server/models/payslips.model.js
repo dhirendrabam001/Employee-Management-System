@@ -34,7 +34,7 @@ const payslipSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Paid", "Pending"],
+      enum: ["Paid", "Pending", "Processing"],
       default: "Paid",
     },
   },
