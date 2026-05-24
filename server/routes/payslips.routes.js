@@ -1,8 +1,13 @@
 const express = require("express");
-const { payslips } = require("../controllers/payslips.controller");
+const auth = require("../middleware/auth");
+const {
+  payslips,
+  getAllPayslips,
+} = require("../controllers/payslips.controller");
 
 const router = express.Router();
 
-router.post("/payslips", payslips);
+router.post("/payslips", auth, payslips);
+router.get("/getAllPayslipsList", getAllPayslips);
 
 module.exports = router;

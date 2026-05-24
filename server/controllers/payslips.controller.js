@@ -78,4 +78,31 @@ const payslips = async (req, res) => {
   }
 };
 
-module.exports = { payslips };
+// getAllPayslips
+const getAllPayslips = async (req, res) => {
+  try {
+    const payslip = await Payslips.find()
+      .populate("employee")
+      .sort({ createdAt: -1 });
+
+    if (payslip.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Payslips list not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      payslip,
+      message: "Payslip data fetched successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+module.exports = { payslips, getAllPayslips };

@@ -4,16 +4,12 @@ import { FaPlus } from "react-icons/fa6";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import PayslipsModal from "./PayslipsModal";
+import useGetAllPayslip from "../../../../hooks/useGetAllPayslips";
+import { useSelector } from "react-redux";
 
 const PayslipsDetails = () => {
+  useGetAllPayslip();
   const navigate = useNavigate();
-  const periodOptions = [
-    { value: "all", label: "All Periods" },
-    { value: "2026-01", label: "January 2026" },
-    { value: "2025-12", label: "December 2025" },
-    { value: "2025-11", label: "November 2025" },
-  ];
-
   const payslips = [
     {
       id: 1,
@@ -84,10 +80,11 @@ const PayslipsDetails = () => {
               </div>
 
               <div className="history-filter">
-                <Select
-                  options={periodOptions}
-                  classNamePrefix="select-custom"
-                  menuPlacement="top"
+                <input
+                  type="text"
+                  className="form-control custom-input"
+                  name="firstName"
+                  placeholder="Seach payslip by name..."
                 />
               </div>
             </div>
@@ -136,7 +133,7 @@ const PayslipsDetails = () => {
                             <button
                               className="btn btn-sm download-btn d-flex align-items-center gap-2"
                               onClick={() =>
-                                navigate(`/admin/payslip/print/${item._id}`)
+                                navigate(`/admin/payslip/print/${item.id}`)
                               }
                             >
                               <FaDownload />
