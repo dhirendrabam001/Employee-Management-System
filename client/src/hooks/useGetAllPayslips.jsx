@@ -13,7 +13,6 @@ const useGetAllPayslip = () => {
           `${PAYSLIPS_API_END_POINT}/getAllPayslipsList`,
           { withCredentials: true },
         );
-        console.log("data", res.data);
 
         if (res.data.success) {
           dispatch(setPayslip(res.data.payslip));

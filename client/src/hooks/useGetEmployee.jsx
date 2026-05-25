@@ -18,8 +18,6 @@ const useGetEmployee = () => {
         );
 
         if (res.data.success) {
-          console.log("data", res.data);
-
           dispatch(setEmployee(res.data.employee));
         }
       } catch (error) {

@@ -89,14 +89,14 @@ const getAllEmployeeList = async (req, res) => {
 
     if (!employee) {
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Employee is not fetched" });
     }
 
     return res.status(200).json({
       success: true,
       employee,
-      message: "Employee data is not fetched",
+      message: "Employee data fetched successfully",
     });
   } catch (error) {
     console.error(error);

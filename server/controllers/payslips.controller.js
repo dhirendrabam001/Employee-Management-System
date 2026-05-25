@@ -46,7 +46,12 @@ const payslips = async (req, res) => {
     const netEmployeeSalary =
       employeeSalary + totalAllowances - totalDeductions;
 
+    // 5️⃣ Generate professional payslip ID
+    const payslipId = `PS-${year}-${month}-${Date.now().toString().slice(-4)}`;
     // create new patslip
+
+    console.log("pay", payslipId);
+
     const newPayslips = await Payslips.create({
       employee,
       month,
@@ -56,6 +61,7 @@ const payslips = async (req, res) => {
       deductions: totalDeductions,
       netSalary: netEmployeeSalary,
       status,
+      payslipId,
     });
 
     // populate employeedata
@@ -67,7 +73,7 @@ const payslips = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      payslips: populatePayslips,
+      payslip: populatePayslips,
       message: "Payslips generated successfully!",
     });
   } catch (error) {
@@ -105,4 +111,29 @@ const getAllPayslips = async (req, res) => {
   }
 };
 
-module.exports = { payslips, getAllPayslips };
+const getPayslipById = async (req, res) => {
+  try {
+    const payslipId = req.params.id;
+
+    const payslip = await Payslips.findById(payslipId);
+
+    if (!payslip) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Payslip is not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      payslip,
+      message: "Payslip is found particular id",
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+module.exports = { payslips, getAllPayslips, getPayslipById };

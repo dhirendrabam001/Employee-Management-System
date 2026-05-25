@@ -9,22 +9,44 @@ import {
 } from "react-icons/fi";
 import { CgMail } from "react-icons/cg";
 import { FaCriticalRole } from "react-icons/fa";
-
+import { useSelector } from "react-redux";
+import useGetEmployee from "../../../../hooks/useGetEmployee";
+import useGetAllPayslip from "../../../../hooks/useGetAllPayslips";
 const PrintPayslip = () => {
-  const employee = {
-    name: "James Thomas",
-    position: "Marketing",
-    role: "Full stack developer",
-    email: "tem1@gmail.com",
-    period: "February 2026",
-    payslipId: "PS-2026-02-1024",
-    payDate: "28 Feb 2026",
-    paymentMethod: "Bank Transfer",
-    paymentMask: "**** **** **** 1234",
-    basicSalary: 1000,
-    allowances: 100,
-    deductions: 100,
-  };
+  useGetEmployee();
+  useGetAllPayslip();
+  const { employee } = useSelector((store) => store.employee);
+  const { payslip } = useSelector((store) => store.payslip);
+  console.log("pay", payslip);
+
+  console.log(employee);
+
+  // safely extract first employee
+  const firstEmployee = employee?.[0] ?? {};
+
+  // derived values (no crashes)
+  const employeeName =
+    `${firstEmployee?.firstName ?? ""} ${firstEmployee?.lastName ?? ""}`.trim();
+  const employeeInitials = `${firstEmployee?.firstName?.[0] ?? ""}${firstEmployee?.lastName?.[0] ?? ""}`;
+  const fullPayslip = payslip?.[0] ?? {};
+  const period =
+    `${fullPayslip?.month ?? ""} ${fullPayslip?.year ?? ""}`.trim();
+  console.log("period", period);
+
+  // const employeedata = {
+  //   name: "James Thomas",
+  //   position: "Marketing",
+  //   role: "Full stack developer",
+  //   email: "tem1@gmail.com",
+  //   period: "February 2026",
+  //   payslipId: "PS-2026-02-1024",
+  //   payDate: "28 Feb 2026",
+  //   paymentMethod: "Bank Transfer",
+  //   paymentMask: "**** **** **** 1234",
+  //   basicSalary: 1000,
+  //   allowances: 100,
+  //   deductions: 100,
+  // };
 
   const netSalary =
     employee.basicSalary + employee.allowances - employee.deductions;
@@ -41,10 +63,10 @@ const PrintPayslip = () => {
             <div className="col-12 col-md-4 col-lg-4">
               <div className="payslip-card__top">
                 <div className="payslip-card__profile">
-                  <div className="payslip-avatar">JT</div>
+                  <div className="payslip-avatar">{employeeInitials}</div>
                   <div>
                     <p className="payslip-label">EMPLOYEE NAME</p>
-                    <h2>{employee.name}</h2>
+                    <h2>{employeeName}</h2>
                   </div>
                 </div>
               </div>
@@ -58,7 +80,7 @@ const PrintPayslip = () => {
                       <FiBriefcase className="meta-icon" />
                       <div>
                         <p>POSITION</p>
-                        <strong>{employee.position}</strong>
+                        <strong>{firstEmployee?.department}</strong>
                       </div>
                     </div>
                   </div>
@@ -70,7 +92,7 @@ const PrintPayslip = () => {
                       <FiCalendar className="meta-icon" />
                       <div>
                         <p>PERIOD</p>
-                        <strong>{employee.period}</strong>
+                        <strong>{period}</strong>
                       </div>
                     </div>
                   </div>
@@ -82,7 +104,7 @@ const PrintPayslip = () => {
                       <CgMail className="meta-icon" />
                       <div>
                         <p>EMAIL</p>
-                        <strong>{employee.email}</strong>
+                        <strong></strong>
                       </div>
                     </div>
                   </div>
@@ -94,7 +116,7 @@ const PrintPayslip = () => {
                       <FaCriticalRole className="meta-icon" />
                       <div>
                         <p>ROLE</p>
-                        <strong>{employee.role}</strong>
+                        <strong></strong>
                       </div>
                     </div>
                   </div>
@@ -104,7 +126,7 @@ const PrintPayslip = () => {
             <div className="col-12 col-md-3 col-lg-3">
               <div className="payslip-id-card">
                 <p>Payslip ID</p>
-                <strong>{employee.payslipId}</strong>
+                <strong></strong>
               </div>
             </div>
           </div>
@@ -125,9 +147,7 @@ const PrintPayslip = () => {
                 </div>
               </div>
               <div className="payslip-table__desc">Monthly basic salary</div>
-              <div className="payslip-table__amount">
-                ${employee.basicSalary.toFixed(2)}
-              </div>
+              <div className="payslip-table__amount"></div>
             </div>
 
             <div className="payslip-table__row">
@@ -140,7 +160,7 @@ const PrintPayslip = () => {
               </div>
               <div className="payslip-table__desc">Additional allowances</div>
               <div className="payslip-table__amount payslip-positive">
-                +${employee.allowances.toFixed(2)}
+                {/* +${employeedata.allowances} */}
               </div>
             </div>
 
@@ -156,7 +176,7 @@ const PrintPayslip = () => {
                 Tax, insurance & other deductions
               </div>
               <div className="payslip-table__amount payslip-negative">
-                -${employee.deductions.toFixed(2)}
+                {/* -${employeedata.deductions} */}
               </div>
             </div>
           </div>
@@ -165,7 +185,7 @@ const PrintPayslip = () => {
               <p>NET SALARY</p>
               <span>(Total Earnings - Total Deductions)</span>
             </div>
-            <strong>${netSalary.toFixed(2)}</strong>
+            <strong></strong>
           </div>
 
           <div className="payslip-card__bottom">
@@ -175,7 +195,7 @@ const PrintPayslip = () => {
               </div>
               <div>
                 <p>PAY DATE</p>
-                <strong>{employee.payDate}</strong>
+                <strong></strong>
               </div>
             </div>
 
@@ -185,8 +205,8 @@ const PrintPayslip = () => {
               </div>
               <div>
                 <p>PAYMENT METHOD</p>
-                <strong>{employee.paymentMethod}</strong>
-                <span>{employee.paymentMask}</span>
+                {/* <strong>{employeedata.paymentMethod}</strong>
+                <span>{employeedata.paymentMask}</span> */}
               </div>
             </div>
 

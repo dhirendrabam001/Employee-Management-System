@@ -5,37 +5,30 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import PayslipsModal from "./PayslipsModal";
 import useGetAllPayslip from "../../../../hooks/useGetAllPayslips";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setSearchName,
+  setSelectedPayslipId,
+} from "../../../../redux/payslipSlice";
+import useGetPayslipById from "../../../../hooks/useGetPayslipById";
 
 const PayslipsDetails = () => {
   useGetAllPayslip();
+
+  const { payslip, searchName, selectedPayslipId } = useSelector(
+    (store) => store.payslip,
+  );
+  useGetPayslipById(selectedPayslipId);
+
   const navigate = useNavigate();
-  const payslips = [
-    {
-      id: 1,
-      period: "January 2026",
-      range: "01 Jan 2026 - 31 Jan 2026",
-      basicSalary: "$1,000.00",
-      netSalary: "$1,000.00",
-      status: "Paid",
-    },
-    {
-      id: 2,
-      period: "December 2025",
-      range: "01 Dec 2025 - 31 Dec 2025",
-      basicSalary: "$980.00",
-      netSalary: "$980.00",
-      status: "Paid",
-    },
-    {
-      id: 3,
-      period: "November 2025",
-      range: "01 Nov 2025 - 30 Nov 2025",
-      basicSalary: "$1,020.00",
-      netSalary: "$1,020.00",
-      status: "Paid",
-    },
-  ];
+  const dispatch = useDispatch();
+
+  const filterPayslip = payslip.filter((item) => {
+    const fullName =
+      `${item?.employee?.firstName} ${item?.employee?.lastName}`.toLowerCase();
+
+    return fullName.includes(searchName.toLowerCase());
+  });
 
   return (
     <>
@@ -82,8 +75,9 @@ const PayslipsDetails = () => {
               <div className="history-filter">
                 <input
                   type="text"
+                  value={searchName}
+                  onChange={(e) => dispatch(setSearchName(e.target.value))}
                   className="form-control custom-input"
-                  name="firstName"
                   placeholder="Seach payslip by name..."
                 />
               </div>
@@ -102,19 +96,18 @@ const PayslipsDetails = () => {
                     <th className="text-center">ACTIONS</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {payslips.length === 0 ? (
+                  {filterPayslip.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="text-center py-5">
                         No payslips found
                       </td>
                     </tr>
                   ) : (
-                    payslips.map((item) => (
-                      <tr key={item.id}>
-                        <td>Dhirendra Bam</td>
-                        <td>{item.period}</td>
+                    filterPayslip.map((item) => (
+                      <tr key={item._id}>
+                        <td>{`${item.employee.firstName} ${item.employee.lastName}`}</td>
+                        <td>{`${item.month} ${item.year}`}</td>
 
                         <td>{item.basicSalary}</td>
 
@@ -132,9 +125,10 @@ const PayslipsDetails = () => {
                           <div className="d-flex align-items-center justify-content-center">
                             <button
                               className="btn btn-sm download-btn d-flex align-items-center gap-2"
-                              onClick={() =>
-                                navigate(`/admin/payslip/print/${item.id}`)
-                              }
+                              onClick={() => {
+                                dispatch(setSelectedPayslipId(item._id));
+                                navigate(`/admin/payslip/print/${item._id}`);
+                              }}
                             >
                               <FaDownload />
                               Download

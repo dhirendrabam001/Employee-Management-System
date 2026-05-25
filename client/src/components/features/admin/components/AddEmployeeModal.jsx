@@ -52,7 +52,6 @@ const AddEmployeeModal = () => {
   };
 
   const submitHandler = async (e) => {
-    console.log("Input data", input);
     e.preventDefault();
 
     try {
@@ -65,7 +64,7 @@ const AddEmployeeModal = () => {
       );
 
       toast.promise(promise, {
-        pending: "Added new employee",
+        pending: "Added new employee...",
         success: "Employee added successfully",
         error: {
           render({ data }) {

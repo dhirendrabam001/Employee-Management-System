@@ -1,32 +1,24 @@
 import { useState } from "react";
 import Select from "react-select";
 import { FaPlus } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useGetEmployee from "../../../../hooks/useGetEmployee";
+import axios from "axios";
+import { PAYSLIPS_API_END_POINT } from "../../../../utils/constantUrl";
+import { toast } from "react-toastify";
+import { setPayslip } from "../../../../redux/payslipSlice";
 
 const PayslipsModal = () => {
   useGetEmployee();
   const { employee } = useSelector((store) => store.employee);
 
+  const dispatch = useDispatch();
   const employeeOption = employee.map((emp) => {
     return {
       value: emp._id,
       label: `${emp.firstName} ${emp.lastName} - ${emp.position}`,
     };
   });
-
-  const options = [
-    { value: "1", label: "Mark Taylor - UI Designer" },
-    { value: "2", label: "Sophia Turner - Marketing Manager" },
-    { value: "3", label: "James Lee - Developer" },
-    { value: "4", label: "Anne Martin - HR Executive" },
-    { value: "5", label: "Robert Brown - Finance Manager" },
-    { value: "6", label: "Emily Davis - Operations Lead" },
-    { value: "7", label: "Michael Wilson - IT Support" },
-    { value: "8", label: "Sarah Johnson - Customer Success" },
-    { value: "9", label: "David Garcia - Design Lead" },
-    { value: "10", label: "Lisa Anderson - Product Manager" },
-  ];
 
   const months = [
     { value: "01", label: "January" },
@@ -42,6 +34,49 @@ const PayslipsModal = () => {
     { value: "11", label: "November" },
     { value: "12", label: "December" },
   ];
+
+  const [input, setInput] = useState({
+    employee: "",
+    month: "",
+    year: "",
+    allowances: "",
+    deductions: "",
+  });
+
+  const changeHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const changeSelectHandler = (selectOption, name) => {
+    setInput({ ...input, [name]: selectOption.value });
+  };
+
+  const submitHander = async (e) => {
+    e.preventDefault();
+
+    try {
+      const promise = axios.post(`${PAYSLIPS_API_END_POINT}/payslips`, input, {
+        withCredentials: true,
+      });
+
+      toast.promise(promise, {
+        pending: "Added new payslip...",
+        success: "Payslip added successfully",
+        error: {
+          render({ data }) {
+            return data?.response?.data?.message || "Payslips is not added";
+          },
+        },
+      });
+
+      const res = await promise;
+      if (res.data.success) {
+        dispatch(setPayslip([...payslips, res.data.payslip]));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div
@@ -70,76 +105,97 @@ const PayslipsModal = () => {
 
           <div className="payslips-modal-body">
             <div className="payslips-form-section">
-              <div className="form-group-full">
-                <label className="payslips-form-label">Select Employee *</label>
-                <Select
-                  options={employeeOption}
-                  placeholder="Choose an employee..."
-                  classNamePrefix="payslips-select"
-                  menuPlacement="top"
-                  isSearchable={true}
-                />
-              </div>
-
-              <div className="form-group-row">
-                <div className="form-group-half">
-                  <label className="payslips-form-label">Month *</label>
+              <form onSubmit={submitHander}>
+                <div className="form-group-full">
+                  <label className="payslips-form-label">
+                    Select Employee *
+                  </label>
                   <Select
-                    options={months}
-                    placeholder="Select month..."
+                    options={employeeOption}
+                    name="employee"
+                    value={employeeOption.find(
+                      (opt) => opt.value === input.employee,
+                    )}
+                    onChange={(option) =>
+                      changeSelectHandler(option, "employee")
+                    }
+                    placeholder="Choose an employee..."
                     classNamePrefix="payslips-select"
-                    menuPlacement="bottom"
+                    menuPlacement="top"
+                    isSearchable={true}
                   />
                 </div>
-                <div className="form-group-half">
-                  <label className="payslips-form-label">Year *</label>
-                  <input
-                    type="number"
-                    name="year"
-                    className="payslips-form-input"
-                    placeholder="2026"
-                    min="2000"
-                    max="2099"
-                  />
-                </div>
-              </div>
 
-              <div className="form-divider"></div>
+                <div className="form-group-row">
+                  <div className="form-group-half">
+                    <label className="payslips-form-label">Month *</label>
+                    <Select
+                      options={months}
+                      name="month"
+                      value={months.find((opt) => opt.value === input.month)}
+                      onChange={(option) =>
+                        changeSelectHandler(option, "month")
+                      }
+                      placeholder="Select month..."
+                      classNamePrefix="payslips-select"
+                      menuPlacement="bottom"
+                    />
+                  </div>
+                  <div className="form-group-half">
+                    <label className="payslips-form-label">Year *</label>
+                    <input
+                      type="number"
+                      name="year"
+                      value={input.year}
+                      onChange={changeHandler}
+                      className="payslips-form-input"
+                      placeholder="2026"
+                      min="2000"
+                      max="2099"
+                    />
+                  </div>
+                </div>
 
-              <div className="form-group-row">
-                <div className="form-group-half">
-                  <label className="payslips-form-label">Allowances</label>
-                  <input
-                    type="number"
-                    name="allowances"
-                    className="payslips-form-input"
-                    placeholder="0.00"
-                    min="0"
-                    step="0.01"
-                  />
+                <div className="form-divider"></div>
+
+                <div className="form-group-row">
+                  <div className="form-group-half">
+                    <label className="payslips-form-label">Allowances</label>
+                    <input
+                      type="number"
+                      name="allowances"
+                      value={input.allowances}
+                      onChange={changeHandler}
+                      className="payslips-form-input"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                  <div className="form-group-half">
+                    <label className="payslips-form-label">Deductions</label>
+                    <input
+                      type="number"
+                      name="deductions"
+                      value={input.deductions}
+                      onChange={changeHandler}
+                      className="payslips-form-input"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
                 </div>
-                <div className="form-group-half">
-                  <label className="payslips-form-label">Deductions</label>
-                  <input
-                    type="number"
-                    name="deductions"
-                    className="payslips-form-input"
-                    placeholder="0.00"
-                    min="0"
-                    step="0.01"
-                  />
+                <div className="payslips-modal-footer">
+                  <button
+                    type="submit"
+                    className="employee-add-btn d-flex align-items-center gap-2"
+                  >
+                    <FaPlus /> Generate Payslip
+                  </button>
                 </div>
-              </div>
+              </form>
             </div>
-          </div>
-
-          <div className="payslips-modal-footer">
-            <button
-              type="button"
-              className="employee-add-btn d-flex align-items-center gap-2"
-            >
-              <FaPlus /> Generate Payslip
-            </button>
           </div>
         </div>
       </div>

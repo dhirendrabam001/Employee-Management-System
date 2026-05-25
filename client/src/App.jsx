@@ -81,7 +81,10 @@ function App() {
         <Route path="/admin/employees" element={<Employees />}></Route>
         <Route path="/admin/leave" element={<Leave />}></Route>
         <Route path="/admin/payslips" element={<Payslips />}></Route>
-        <Route path="/admin/payslip/print" element={<PrintPayslip />}></Route>
+        <Route
+          path="/admin/payslip/print/:id"
+          element={<PrintPayslip />}
+        ></Route>
 
         {/* employee routes */}
         <Route
