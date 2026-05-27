@@ -30,6 +30,19 @@ const PayslipsDetails = () => {
     return fullName.includes(searchName.toLowerCase());
   });
 
+  // get status
+  const getStatusBadge = (status) => {
+    if (status === "Paid") {
+      return "bg-success-subtle text-success";
+    } else if (status === "Pending") {
+      return "bg-warning-subtle text-warning";
+    } else if (status === "Processing") {
+      return "bg-info-subtle text-info";
+    } else {
+      return "bg-secondary-subtle text-secondary";
+    }
+  };
+
   return (
     <>
       <section className="payslips-panel">
@@ -116,7 +129,9 @@ const PayslipsDetails = () => {
                         </td>
 
                         <td>
-                          <span className="badge bg-success-subtle text-success px-3 py-2">
+                          <span
+                            className={`badge px-3 py-2 ${getStatusBadge(item.status)}`}
+                          >
                             {item.status}
                           </span>
                         </td>

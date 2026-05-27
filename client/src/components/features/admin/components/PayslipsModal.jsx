@@ -11,6 +11,7 @@ import { setPayslip } from "../../../../redux/payslipSlice";
 const PayslipsModal = () => {
   useGetEmployee();
   const { employee } = useSelector((store) => store.employee);
+  console.log("employee", employee);
 
   const dispatch = useDispatch();
   const employeeOption = employee.map((emp) => {
@@ -121,7 +122,7 @@ const PayslipsModal = () => {
                     }
                     placeholder="Choose an employee..."
                     classNamePrefix="payslips-select"
-                    menuPlacement="top"
+                    menuPlacement="bottom"
                     isSearchable={true}
                   />
                 </div>

@@ -1,237 +1,166 @@
-import {
-  FiDownload,
-  FiMail,
-  FiCalendar,
-  FiBriefcase,
-  FiShield,
-  FiCreditCard,
-  FiPrinter,
-} from "react-icons/fi";
-import { CgMail } from "react-icons/cg";
-import { FaCriticalRole } from "react-icons/fa";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import useGetEmployee from "../../../../hooks/useGetEmployee";
-import useGetAllPayslip from "../../../../hooks/useGetAllPayslips";
+import useGetPayslipById from "../../../../hooks/useGetPayslipById";
+
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
 const PrintPayslip = () => {
-  useGetEmployee();
-  useGetAllPayslip();
-  const { employee } = useSelector((store) => store.employee);
-  const { payslip } = useSelector((store) => store.payslip);
-  console.log("pay", payslip);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { singlePayslipData } = useSelector((store) => store.payslip);
 
-  console.log(employee);
+  useGetPayslipById(id);
 
-  // safely extract first employee
-  const firstEmployee = employee?.[0] ?? {};
+  const employee = singlePayslipData?.employee;
+  const period = singlePayslipData
+    ? `${singlePayslipData.month} ${singlePayslipData.year}`
+    : "";
 
-  // derived values (no crashes)
-  const employeeName =
-    `${firstEmployee?.firstName ?? ""} ${firstEmployee?.lastName ?? ""}`.trim();
-  const employeeInitials = `${firstEmployee?.firstName?.[0] ?? ""}${firstEmployee?.lastName?.[0] ?? ""}`;
-  const fullPayslip = payslip?.[0] ?? {};
-  const period =
-    `${fullPayslip?.month ?? ""} ${fullPayslip?.year ?? ""}`.trim();
-  console.log("period", period);
+  const formatCurrency = (value) => currencyFormatter.format(value ?? 0);
 
-  // const employeedata = {
-  //   name: "James Thomas",
-  //   position: "Marketing",
-  //   role: "Full stack developer",
-  //   email: "tem1@gmail.com",
-  //   period: "February 2026",
-  //   payslipId: "PS-2026-02-1024",
-  //   payDate: "28 Feb 2026",
-  //   paymentMethod: "Bank Transfer",
-  //   paymentMask: "**** **** **** 1234",
-  //   basicSalary: 1000,
-  //   allowances: 100,
-  //   deductions: 100,
-  // };
-
-  const netSalary =
-    employee.basicSalary + employee.allowances - employee.deductions;
-
-  const handlePrint = () => {
-    window.print();
-  };
+  if (!singlePayslipData) {
+    return (
+      <div className="payslip-page">
+        <div className="container">
+          <div className="payslip-card text-center py-5">
+            <p>Loading payslip details...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <section className="payslip-page">
+    <div className="payslip-page">
       <div className="container">
+        <div className="payslip-action-bar">
+          <div>
+            <p className="text-uppercase text-muted mb-2">Payslip</p>
+            <h1 className="mb-1">{`Paystub – ${period}`}</h1>
+            <p className="text-muted">Professional employee payslip summary</p>
+          </div>
+
+          <div className="d-flex gap-2 flex-wrap">
+            <button className="btn btn-secondary" onClick={() => navigate(-1)}>
+              Back
+            </button>
+            <button className="btn btn-primary" onClick={() => window.print()}>
+              Print Payslip
+            </button>
+          </div>
+        </div>
+
         <div className="payslip-card">
-          <div className="row g-3">
-            <div className="col-12 col-md-4 col-lg-4">
-              <div className="payslip-card__top">
-                <div className="payslip-card__profile">
-                  <div className="payslip-avatar">{employeeInitials}</div>
-                  <div>
-                    <p className="payslip-label">EMPLOYEE NAME</p>
-                    <h2>{employeeName}</h2>
-                  </div>
-                </div>
-              </div>
+          <div className="payslip-card__profile mb-4">
+            <div className="payslip-avatar">
+              {employee?.firstName?.[0]}
+              {employee?.lastName?.[0]}
             </div>
-            <div className="col-12 col-md-8 col-lg-5">
-              {/* second row */}
-              <div className="row g-3">
-                <div className="col-12 col-md-6 col-lg-6">
-                  <div className="payslip-meta">
-                    <div className="payslip-meta__item">
-                      <FiBriefcase className="meta-icon" />
-                      <div>
-                        <p>POSITION</p>
-                        <strong>{firstEmployee?.department}</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* 2 */}
-                <div className="col-12 col-md-6 col-lg-6">
-                  <div className="payslip-meta">
-                    <div className="payslip-meta__item">
-                      <FiCalendar className="meta-icon" />
-                      <div>
-                        <p>PERIOD</p>
-                        <strong>{period}</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* 2 */}
-                <div className="col-12 col-md-6 col-lg-6">
-                  <div className="payslip-meta">
-                    <div className="payslip-meta__item">
-                      <CgMail className="meta-icon" />
-                      <div>
-                        <p>EMAIL</p>
-                        <strong></strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* 4 */}
-                <div className="col-12 col-md-6 col-lg-6">
-                  <div className="payslip-meta">
-                    <div className="payslip-meta__item">
-                      <FaCriticalRole className="meta-icon" />
-                      <div>
-                        <p>ROLE</p>
-                        <strong></strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-12 col-md-3 col-lg-3">
-              <div className="payslip-id-card">
-                <p>Payslip ID</p>
-                <strong></strong>
-              </div>
+            <div>
+              <p className="payslip-label">Employee</p>
+              <h2>{`${employee?.firstName || ""} ${employee?.lastName || ""}`}</h2>
             </div>
           </div>
-          {/* table */}
-          <div className="payslip-table mt-4">
+
+          <div className="payslip-info-grid mb-4">
+            <div className="payslip-info-item">
+              <p>Employee Name</p>
+              <strong>{`${employee?.firstName || ""} ${employee?.lastName || ""}`}</strong>
+            </div>
+            <div className="payslip-info-item">
+              <p>Position</p>
+              <strong>{employee?.position || "—"}</strong>
+            </div>
+            <div className="payslip-info-item">
+              <p>Email</p>
+              <strong>{employee?.email || "—"}</strong>
+            </div>
+            <div className="payslip-info-item">
+              <p>Period</p>
+              <strong>{period}</strong>
+            </div>
+          </div>
+
+          <div className="payslip-table">
             <div className="payslip-table__head">
-              <span>EARNINGS & DEDUCTIONS</span>
-              <span>DESCRIPTION</span>
-              <span>AMOUNT</span>
+              <span>Description</span>
+              <span className="text-end">Amount</span>
             </div>
-
-            <div className="payslip-table__row">
-              <div className="payslip-table__title">
-                <div className="table-dot table-dot--green" />
-                <div>
-                  <p>Basic Salary</p>
-                  <span>Monthly basic salary</span>
-                </div>
-              </div>
-              <div className="payslip-table__desc">Monthly basic salary</div>
-              <div className="payslip-table__amount"></div>
-            </div>
-
             <div className="payslip-table__row">
               <div className="payslip-table__title">
                 <div className="table-dot table-dot--blue" />
                 <div>
-                  <p>Allowances</p>
-                  <span>Additional allowances</span>
+                  <p>Basic Salary</p>
+                  <span>{`${singlePayslipData.month} ${singlePayslipData.year}`}</span>
                 </div>
               </div>
-              <div className="payslip-table__desc">Additional allowances</div>
-              <div className="payslip-table__amount payslip-positive">
-                {/* +${employeedata.allowances} */}
+              <div className="payslip-table__amount">
+                {formatCurrency(singlePayslipData.basicSalary)}
               </div>
             </div>
-
+            <div className="payslip-table__row">
+              <div className="payslip-table__title">
+                <div className="table-dot table-dot--green" />
+                <div>
+                  <p>Allowances</p>
+                  <span>Additional benefits</span>
+                </div>
+              </div>
+              <div className="payslip-table__amount payslip-positive">
+                {formatCurrency(singlePayslipData.allowances)}
+              </div>
+            </div>
             <div className="payslip-table__row">
               <div className="payslip-table__title">
                 <div className="table-dot table-dot--red" />
                 <div>
                   <p>Deductions</p>
-                  <span>Tax, insurance & other deductions</span>
+                  <span>Tax and other deductions</span>
                 </div>
               </div>
-              <div className="payslip-table__desc">
-                Tax, insurance & other deductions
-              </div>
               <div className="payslip-table__amount payslip-negative">
-                {/* -${employeedata.deductions} */}
+                {formatCurrency(singlePayslipData.deductions)}
               </div>
             </div>
           </div>
+
           <div className="payslip-total">
             <div>
-              <p>NET SALARY</p>
-              <span>(Total Earnings - Total Deductions)</span>
+              <p>Net Salary</p>
+              <span>Final payment after adjustments</span>
             </div>
-            <strong></strong>
+            <strong>{formatCurrency(singlePayslipData.netSalary)}</strong>
           </div>
 
           <div className="payslip-card__bottom">
             <div className="bottom-item">
-              <div className="bottom-icon-box">
-                <FiCalendar />
-              </div>
+              <div className="bottom-icon-box">B</div>
               <div>
-                <p>PAY DATE</p>
-                <strong></strong>
+                <p className="mb-1">Basic salary</p>
+                <strong>{formatCurrency(singlePayslipData.basicSalary)}</strong>
               </div>
             </div>
-
             <div className="bottom-item">
-              <div className="bottom-icon-box">
-                <FiCreditCard />
-              </div>
+              <div className="bottom-icon-box">A</div>
               <div>
-                <p>PAYMENT METHOD</p>
-                {/* <strong>{employeedata.paymentMethod}</strong>
-                <span>{employeedata.paymentMask}</span> */}
+                <p className="mb-1">Allowances</p>
+                <strong>{formatCurrency(singlePayslipData.allowances)}</strong>
               </div>
             </div>
-
-            <div className="bottom-note">
-              <div className="bottom-icon-box bottom-icon-box--muted">
-                <FiShield />
+            <div className="bottom-item">
+              <div className="bottom-icon-box">D</div>
+              <div>
+                <p className="mb-1">Deductions</p>
+                <strong>{formatCurrency(singlePayslipData.deductions)}</strong>
               </div>
-              <p>
-                This is a system generated payslip and does not require
-                signature.
-              </p>
             </div>
-          </div>
-
-          <div className="payslip-actions">
-            <button type="button" className="secondary-btn">
-              <FiDownload /> Download PDF
-            </button>
-            <button type="button" className="primary-btn" onClick={handlePrint}>
-              <FiPrinter /> Print Payslip
-            </button>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -6,7 +6,7 @@ const payslipSlice = createSlice({
     payslip: [],
     searchName: "",
     selectedPayslipId: null,
-    singlePayslipData: [],
+    singlePayslipData: null,
   },
   reducers: {
     setPayslip: (state, action) => {

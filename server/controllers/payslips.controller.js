@@ -46,12 +46,6 @@ const payslips = async (req, res) => {
     const netEmployeeSalary =
       employeeSalary + totalAllowances - totalDeductions;
 
-    // 5️⃣ Generate professional payslip ID
-    const payslipId = `PS-${year}-${month}-${Date.now().toString().slice(-4)}`;
-    // create new patslip
-
-    console.log("pay", payslipId);
-
     const newPayslips = await Payslips.create({
       employee,
       month,
@@ -60,8 +54,7 @@ const payslips = async (req, res) => {
       allowances: totalAllowances,
       deductions: totalDeductions,
       netSalary: netEmployeeSalary,
-      status,
-      payslipId,
+      status: "Pending",
     });
 
     // populate employeedata
@@ -115,7 +108,10 @@ const getPayslipById = async (req, res) => {
   try {
     const payslipId = req.params.id;
 
-    const payslip = await Payslips.findById(payslipId);
+    const payslip = await Payslips.findById(payslipId).populate(
+      "employee",
+      "firstName lastName email position department",
+    );
 
     if (!payslip) {
       return res
