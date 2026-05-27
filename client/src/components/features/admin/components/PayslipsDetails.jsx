@@ -7,10 +7,15 @@ import PayslipsModal from "./PayslipsModal";
 import useGetAllPayslip from "../../../../hooks/useGetAllPayslips";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setPayslip,
   setSearchName,
   setSelectedPayslipId,
 } from "../../../../redux/payslipSlice";
 import useGetPayslipById from "../../../../hooks/useGetPayslipById";
+import axios from "axios";
+import { PAYSLIPS_API_END_POINT } from "../../../../utils/constantUrl";
+import { toast } from "react-toastify";
+import { showSuccess } from "../../../../utils/toast";
 
 const PayslipsDetails = () => {
   useGetAllPayslip();
@@ -18,6 +23,7 @@ const PayslipsDetails = () => {
   const { payslip, searchName, selectedPayslipId } = useSelector(
     (store) => store.payslip,
   );
+
   useGetPayslipById(selectedPayslipId);
 
   const navigate = useNavigate();
@@ -40,6 +46,28 @@ const PayslipsDetails = () => {
       return "bg-info-subtle text-info";
     } else {
       return "bg-secondary-subtle text-secondary";
+    }
+  };
+
+  const updateStatus = async (id, status) => {
+    try {
+      const res = await axios.put(
+        `${PAYSLIPS_API_END_POINT}/updateStatus/${id}/status`,
+        { status },
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (res.data.success) {
+        const updateList = payslip.map((item) =>
+          item._id === id ? res.data.payslip : item,
+        );
+        dispatch(setPayslip(res.data.payslip));
+        showSuccess("Status Updated");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

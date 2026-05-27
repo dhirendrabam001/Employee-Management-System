@@ -107,7 +107,7 @@ const PayslipsModal = () => {
           <div className="payslips-modal-body">
             <div className="payslips-form-section">
               <form onSubmit={submitHander}>
-                <div className="form-group-full">
+                <div className="form-group-full mb-3">
                   <label className="payslips-form-label">
                     Select Employee *
                   </label>
@@ -128,7 +128,7 @@ const PayslipsModal = () => {
                 </div>
 
                 <div className="form-group-row">
-                  <div className="form-group-half">
+                  <div className="form-group-half mb-2">
                     <label className="payslips-form-label">Month *</label>
                     <Select
                       options={months}
@@ -142,7 +142,7 @@ const PayslipsModal = () => {
                       menuPlacement="bottom"
                     />
                   </div>
-                  <div className="form-group-half">
+                  <div className="form-group-half mb-2">
                     <label className="payslips-form-label">Year *</label>
                     <input
                       type="number"

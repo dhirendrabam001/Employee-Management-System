@@ -132,4 +132,35 @@ const getPayslipById = async (req, res) => {
   }
 };
 
-module.exports = { payslips, getAllPayslips, getPayslipById };
+// update status controller
+const updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const payslipId = req.params.id;
+
+    const payslip = await Payslips.findByIdAndUpdate(
+      payslipId,
+      { status },
+      { new: true },
+    );
+
+    if (!payslip) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Payslip status does not found!" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      payslip,
+      message: "Payslip status updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+module.exports = { payslips, getAllPayslips, getPayslipById, updateStatus };
