@@ -2477,3 +2477,212 @@ body {
 }
 
 /* payslips modal css end */
+
+/* settings page css start */
+.settings-details h2 {
+  color: var(--h2-color);
+  font-size: var(--h2-size);
+}
+.settings-details p {
+  color: var(--p-color);
+  font-size: var(--p-size);
+}
+.setting-main {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.setting-topbar {
+  padding-bottom: 16px;
+}
+
+.setting-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.setting-heading h5 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.setting-main hr {
+  border-color: #e5e7eb;
+  margin: 16px 0 24px;
+}
+
+.setting-form .form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.setting-form .form-control {
+  height: 47px;
+  border-radius: 8px;
+  border: 1px solid #e4e7eb;
+  background: #ffffff;
+  font-size: 14px;
+  color: #0f172a;
+  padding: 10px 12px;
+}
+
+.setting-form textarea.form-control {
+  height: auto;
+  resize: none;
+}
+
+.setting-form .form-control:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.setting-form p {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 6px;
+}
+.setting-btn {
+  padding: 12px 20px;
+}
+
+.password-change {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-top: 24px;
+  background: #ffffff;
+}
+
+/* top bar already exists, reused */
+.password-change .setting-topbar {
+  padding-bottom: 0;
+}
+
+/* Change button */
+.change-btn button {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid #e4e7eb;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.change-btn button:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.change-btn button:active {
+  transform: scale(0.97);
+}
+
+.modal-content {
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header .modal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.modal-header h5 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.modal-header .btn-close {
+  background-size: 12px;
+  opacity: 0.6;
+}
+
+.modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-body {
+  padding: 18px 20px;
+}
+
+.modal-body .form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.modal-body .form-control {
+  height: 46px;
+  border-radius: 8px;
+  border: 1px solid #e4e7eb;
+  background: #ffffff;
+  font-size: 14px;
+  padding: 10px 12px;
+  color: #0f172a;
+}
+
+.modal-body .form-control:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.modal-footer .btn-primary {
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #2563eb;
+  border: none;
+  transition: all 0.25s ease;
+}
+
+.modal-footer .btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.modal-footer .btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* settings page css end */

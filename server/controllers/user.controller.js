@@ -119,6 +119,42 @@ const login = async (req, res) => {
   });
 };
 
+// Update Profile and Password
+
+const updateSetting = async (req, res) => {
+  try {
+    const { fullName, email, bio } = req.body;
+    const userId = req.user.id;
+
+    // check email already exit or mot
+    const checkEmail = await User.findOne({ email });
+    if (checkEmail) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already exits" });
+    }
+
+    const updateUser = await User.findByIdAndUpdate(userId, {
+      fullName,
+      email,
+      bio,
+    });
+
+    return res.status(200).json({
+      success: true,
+      user: updateUser,
+      message: "Profile updated successfully",
+    });
+
+    console.log(updateUser);
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ suceess: false, message: "Internal server error!" });
+  }
+};
+
 // refresh token
 const getMe = async (req, res) => {
   try {
@@ -152,4 +188,4 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { register, checkEmail, login, getMe, logout };
+module.exports = { register, checkEmail, login, updateSetting, getMe, logout };

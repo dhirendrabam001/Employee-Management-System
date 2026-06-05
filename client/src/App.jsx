@@ -4,7 +4,7 @@ import "./App.css";
 import "./Responsive.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import HeroSection from "./features/home/pages/HeroSection";
 import { Route, Routes } from "react-router-dom";
@@ -23,14 +23,14 @@ import { setUser } from "./redux/authSlice";
 import { showError } from "./utils/toast";
 import Dashboard from "./components/features/admin/pages/Dashboard";
 import Employees from "./components/features/admin/pages/Employees";
-import Loader from "./components/common/Loader";
 import Leave from "./components/features/admin/pages/Leave";
 import Payslips from "./components/features/admin/pages/Payslips";
 import PrintPayslip from "./components/features/admin/components/PrintPayslip";
+import Settings from "./components/features/admin/pages/Settings";
 
 function App() {
   const dispatch = useDispatch();
-  const { loading } = useSelector((store) => store.auth);
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,7 +48,7 @@ function App() {
       }
     };
     fetchUser();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="full-layout">
@@ -85,6 +85,7 @@ function App() {
           path="/admin/payslip/print/:id"
           element={<PrintPayslip />}
         ></Route>
+        <Route path="/admin/setting" element={<Settings />}></Route>
 
         {/* employee routes */}
         <Route
