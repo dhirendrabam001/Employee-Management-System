@@ -127,7 +127,10 @@ const updateSetting = async (req, res) => {
     const userId = req.user.id;
 
     // check email already exit or mot
-    const checkEmail = await User.findOne({ email });
+    const checkEmail = await User.findOne({
+      email,
+      _id: { $ne: userId },
+    });
     if (checkEmail) {
       return res
         .status(400)
@@ -145,13 +148,67 @@ const updateSetting = async (req, res) => {
       user: updateUser,
       message: "Profile updated successfully",
     });
-
-    console.log(updateUser);
   } catch (error) {
     console.error(error);
     return res
       .status(500)
       .json({ suceess: false, message: "Internal server error!" });
+  }
+};
+
+// change password controller
+const changePassword = async (req, res) => {
+  try {
+    const { currentPass, newPass } = req.body;
+    const userId = req.user.id;
+
+    // check both password required
+    if (!currentPass || !newPass) {
+      return res.status(400).json({
+        success: false,
+        message: "Current pass and new password are requried!",
+      });
+    }
+
+    // find user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User is not found!" });
+    }
+
+    // check current password and new password
+    const isMatch = await bcrypt.compare(currentPass, user.password);
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Current password is not matched" });
+    }
+
+    // check new same password
+    const isSamePass = await bcrypt.compare(newPass, user.password);
+    if (isSamePass) {
+      return res.status(400).json({
+        success: false,
+        message: "New password and old password same",
+      });
+    }
+    //  hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashPass = await bcrypt.hash(newPass, salt);
+
+    // update password
+    await User.findByIdAndUpdate(userId, { password: hashPass });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Password change successfully" });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error!" });
   }
 };
 
@@ -188,4 +245,12 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { register, checkEmail, login, updateSetting, getMe, logout };
+module.exports = {
+  register,
+  checkEmail,
+  login,
+  updateSetting,
+  changePassword,
+  getMe,
+  logout,
+};

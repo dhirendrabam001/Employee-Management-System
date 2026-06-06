@@ -2655,7 +2655,10 @@ body {
   padding: 10px 12px;
   color: #0f172a;
 }
-
+.password-setting span {
+  margin-top: 14px;
+  margin-right: 13px !important;
+}
 .modal-body .form-control:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
