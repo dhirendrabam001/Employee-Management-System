@@ -124,24 +124,37 @@ const login = async (req, res) => {
 const updateSetting = async (req, res) => {
   try {
     const { fullName, email, bio } = req.body;
+    console.log("req", req.body);
     const userId = req.user.id;
 
     // check email already exit or mot
+
+    const user = await User.findById(userId);
+    console.log("user", user);
     const checkEmail = await User.findOne({
       email,
       _id: { $ne: userId },
     });
+
     if (checkEmail) {
       return res
         .status(400)
         .json({ success: false, message: "Email already exits" });
     }
 
-    const updateUser = await User.findByIdAndUpdate(userId, {
-      fullName,
-      email,
-      bio,
-    });
+    // create object
+    const updateData = {};
+    if (fullName) updateData.fullName = fullName;
+    if (email) updateData.email = email;
+    if (bio !== undefined) updateData.bio = bio;
+
+    const updateUser = await User.findByIdAndUpdate(
+      userId,
+      updateData,
+
+      { new: true },
+    );
+    console.log("update", updateUser);
 
     return res.status(200).json({
       success: true,

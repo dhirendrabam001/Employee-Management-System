@@ -6,14 +6,17 @@ import { useState } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "../../../../utils/constantUrl";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../../redux/authSlice";
 const SettingDetails = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.auth);
+  console.log("redux", user);
+
   const [input, setInput] = useState({
-    fullName: "",
-    email: "",
-    bio: "",
+    fullName: user?.fullName || "",
+    email: user?.email || "",
+    bio: user?.bio || "",
   });
 
   const changeHandler = (e) => {
@@ -21,6 +24,7 @@ const SettingDetails = () => {
   };
 
   const submitHandler = async (e) => {
+    console.log("input", input);
     e.preventDefault();
 
     try {
@@ -44,11 +48,6 @@ const SettingDetails = () => {
       const res = await promise;
       if (res.data.success) {
         dispatch(setUser(res.data.user));
-        setInput({
-          fullName: "",
-          email: "",
-          bio: "",
-        });
       }
     } catch (error) {
       console.error(error);
