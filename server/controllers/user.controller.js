@@ -124,13 +124,13 @@ const login = async (req, res) => {
 const updateSetting = async (req, res) => {
   try {
     const { fullName, email, bio } = req.body;
-    console.log("req", req.body);
+
     const userId = req.user.id;
 
     // check email already exit or mot
 
     const user = await User.findById(userId);
-    console.log("user", user);
+
     const checkEmail = await User.findOne({
       email,
       _id: { $ne: userId },
@@ -154,7 +154,6 @@ const updateSetting = async (req, res) => {
 
       { new: true },
     );
-    console.log("update", updateUser);
 
     return res.status(200).json({
       success: true,

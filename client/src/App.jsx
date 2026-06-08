@@ -31,7 +31,6 @@ import Settings from "./components/features/admin/pages/Settings";
 function App() {
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     const fetchUser = async () => {
       try {

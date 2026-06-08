@@ -108,8 +108,8 @@ const LeaveDetails = () => {
           </div>
         </div>
 
-        <div className="leave-table-wrapper">
-          <table className="leave-table">
+        <div className="leave-table-wrapper table-responsive">
+          <table className="table table-borderless leave-table">
             <thead>
               <tr>
                 <th>EMPLOYEE</th>
