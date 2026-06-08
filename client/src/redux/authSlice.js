@@ -13,6 +13,9 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.role = action.payload?.role;
     },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
     setEmail: (state, action) => {
       state.email = action.payload;
     },

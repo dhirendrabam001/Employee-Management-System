@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Cube from "./Cube";
 
-export default function LoaderCanvas() {
+const LoaderCanvas = () => {
   return (
     <Canvas
       camera={{ position: [4, 4, 4], fov: 45 }}
@@ -20,4 +20,6 @@ export default function LoaderCanvas() {
       <OrbitControls enableZoom={false} enablePan={false} />
     </Canvas>
   );
-}
+};
+
+export default LoaderCanvas;

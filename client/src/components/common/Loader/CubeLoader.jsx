@@ -1,6 +1,6 @@
 import LoaderCanvas from "./LoaderCanvas";
 
-export default function CubeLoader() {
+const CubeLoader = () => {
   return (
     <div style={styles.wrapper}>
       <LoaderCanvas />
@@ -11,7 +11,7 @@ export default function CubeLoader() {
       </div>
     </div>
   );
-}
+};
 
 const styles = {
   wrapper: {
@@ -29,3 +29,5 @@ const styles = {
     letterSpacing: "0.1em",
   },
 };
+
+export default CubeLoader;

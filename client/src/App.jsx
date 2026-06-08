@@ -4,7 +4,7 @@ import "./App.css";
 import "./Responsive.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import HeroSection from "./features/home/pages/HeroSection";
 import { Route, Routes } from "react-router-dom";
@@ -27,9 +27,11 @@ import Leave from "./components/features/admin/pages/Leave";
 import Payslips from "./components/features/admin/pages/Payslips";
 import PrintPayslip from "./components/features/admin/components/PrintPayslip";
 import Settings from "./components/features/admin/pages/Settings";
+import CubeLoader from "./components/common/Loader/CubeLoader";
 
 function App() {
   const dispatch = useDispatch();
+  const { loading } = useSelector((store) => store.auth);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -50,66 +52,70 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="full-layout">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        draggable
-        theme="dark"
-      />
-      <Routes>
-        <Route path="/" element={<HeroSection />}></Route>
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoutes role="admin">
-              <Dashboard />
-            </ProtectedRoutes>
-          }
-        ></Route>
-        <Route path="/admin/login" element={<LoginSection />}></Route>
-        <Route path="/admin/signup" element={<SignUpSection />}></Route>
-        <Route path="/admin/password" element={<PasswordSection />}></Route>
-        <Route path="/verify" element={<VerifyAccountSection />}></Route>
+    <>
+      {loading && <CubeLoader />}
+      <div className="full-layout">
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="dark"
+        />
+        <Routes>
+          <Route path="/" element={<HeroSection />}></Route>
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoutes role="admin">
+                <Dashboard />
+              </ProtectedRoutes>
+            }
+          ></Route>
+          <Route path="/admin/login" element={<LoginSection />}></Route>
+          <Route path="/admin/signup" element={<SignUpSection />}></Route>
+          <Route path="/admin/password" element={<PasswordSection />}></Route>
+          <Route path="/verify" element={<VerifyAccountSection />}></Route>
 
-        {/* admin pages */}
-        <Route path="/admin/employees" element={<Employees />}></Route>
-        <Route path="/admin/leave" element={<Leave />}></Route>
-        <Route path="/admin/payslips" element={<Payslips />}></Route>
-        <Route
-          path="/admin/payslip/print/:id"
-          element={<PrintPayslip />}
-        ></Route>
-        <Route path="/admin/setting" element={<Settings />}></Route>
+          {/* admin pages */}
+          <Route path="/admin/employees" element={<Employees />}></Route>
+          <Route path="/admin/leave" element={<Leave />}></Route>
+          <Route path="/admin/payslips" element={<Payslips />}></Route>
+          <Route
+            path="/admin/payslip/print/:id"
+            element={<PrintPayslip />}
+          ></Route>
+          <Route path="/admin/setting" element={<Settings />}></Route>
 
-        {/* employee routes */}
-        <Route
-          path="/employee/login"
-          element={<EmployeeLoginSection />}
-        ></Route>
-        <Route
-          path="/employee/dashboard"
-          element={
-            <ProtectedRoutes role="employee">
-              <Dashboard />
-            </ProtectedRoutes>
-          }
-        ></Route>
-        <Route
-          path="/employee/password"
-          element={<EmployeePasswordSection />}
-        ></Route>
+          {/* employee routes */}
+          <Route
+            path="/employee/login"
+            element={<EmployeeLoginSection />}
+          ></Route>
+          <Route
+            path="/employee/dashboard"
+            element={
+              <ProtectedRoutes role="employee">
+                <Dashboard />
+              </ProtectedRoutes>
+            }
+          ></Route>
+          <Route
+            path="/employee/password"
+            element={<EmployeePasswordSection />}
+          ></Route>
 
-        <Route
-          path="/employee/signup"
-          element={<EmployeeSignUpSection />}
-        ></Route>
-      </Routes>
-    </div>
+          <Route
+            path="/employee/signup"
+            element={<EmployeeSignUpSection />}
+          ></Route>
+        </Routes>
+      </div>
+    </>
   );
 }
+
 export default App;
