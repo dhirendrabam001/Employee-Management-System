@@ -6,7 +6,10 @@ const LoaderCanvas = () => {
   return (
     <Canvas
       camera={{ position: [4, 4, 4], fov: 45 }}
-      style={{ height: "100vh", background: "#0b0f14" }}
+      style={{
+        height: "100vh",
+        background: "transparent",
+      }}
     >
       {/* Lights */}
       <ambientLight intensity={0.4} />

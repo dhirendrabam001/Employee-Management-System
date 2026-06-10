@@ -28,10 +28,12 @@ import Payslips from "./components/features/admin/pages/Payslips";
 import PrintPayslip from "./components/features/admin/components/PrintPayslip";
 import Settings from "./components/features/admin/pages/Settings";
 
-import PageLoader from "./components/common/Loader/PageLoader";
+// import PageLoader from "./components/common/Loader/PageLoader";
+import CubeLoader from "./components/common/Loader/CubeLoader";
 
 function App() {
   const dispatch = useDispatch();
+  const { loading } = useSelector((store) => store.auth);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -53,6 +55,7 @@ function App() {
 
   return (
     <>
+      {loading && <CubeLoader />}
       <div className="full-layout">
         <ToastContainer
           position="top-right"
@@ -80,14 +83,7 @@ function App() {
           <Route path="/verify" element={<VerifyAccountSection />}></Route>
 
           {/* admin pages */}
-          <Route
-            path="/admin/employees"
-            element={
-              <PageLoader>
-                <Employees />
-              </PageLoader>
-            }
-          />
+          <Route path="/admin/employees" element={<Employees />} />
           <Route path="/admin/leave" element={<Leave />}></Route>
           <Route path="/admin/payslips" element={<Payslips />}></Route>
           <Route

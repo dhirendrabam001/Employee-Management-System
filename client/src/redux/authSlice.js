@@ -19,9 +19,6 @@ const authSlice = createSlice({
     setEmail: (state, action) => {
       state.email = action.payload;
     },
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
   },
 });
 
