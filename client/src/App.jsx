@@ -31,6 +31,9 @@ import Settings from "./components/features/admin/pages/Settings";
 // import PageLoader from "./components/common/Loader/PageLoader";
 import CubeLoader from "./components/common/Loader/CubeLoader";
 
+// employee pages
+import Attendance from "./components/features/employee/pages/Attendance";
+
 function App() {
   const dispatch = useDispatch();
   const { loading } = useSelector((store) => store.auth);
@@ -114,6 +117,9 @@ function App() {
             path="/employee/signup"
             element={<EmployeeSignUpSection />}
           ></Route>
+
+          {/* Employee pages */}
+          <Route path="/employee/attendance" element={<Attendance />}></Route>
         </Routes>
       </div>
     </>
