@@ -1,32 +1,33 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+const CUBE_SIZE = 1.15;
+
 const Cube = () => {
   const cubeRef = useRef();
+  const edgesGeometry = useMemo(
+    () => new THREE.EdgesGeometry(new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE)),
+    [],
+  );
 
   useFrame((_, delta) => {
-    cubeRef.current.rotation.x += delta * 0.6;
-    cubeRef.current.rotation.y += delta * 0.8;
+    cubeRef.current.rotation.x += delta * 0.65;
+    cubeRef.current.rotation.y += delta * 0.85;
   });
 
   return (
     <mesh ref={cubeRef}>
-      <boxGeometry args={[2, 2, 2]} />
-
-      {/* Cube Material */}
+      <boxGeometry args={[CUBE_SIZE, CUBE_SIZE, CUBE_SIZE]} />
       <meshStandardMaterial
-        color="#000000"
-        roughness={0.2}
-        metalness={0.8}
-        emissive="#7CFF00"
-        emissiveIntensity={0.15}
+        color="#050c1f"
+        roughness={0.35}
+        metalness={0.55}
+        emissive="#4338ca"
+        emissiveIntensity={0.22}
       />
-
-      {/* Neon Edges */}
-      <lineSegments>
-        <edgesGeometry args={[new THREE.BoxGeometry(2, 2, 2)]} />
-        <lineBasicMaterial color="#7CFF00" linewidth={2} />
+      <lineSegments geometry={edgesGeometry}>
+        <lineBasicMaterial color="#6366f1" />
       </lineSegments>
     </mesh>
   );

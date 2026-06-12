@@ -1,6 +1,10 @@
 import Sidebar from "../../../common/Sidebar";
 import LeaveDetails from "../components/LeaveDetails";
+import useEndPageLoader from "../../../../hooks/useEndPageLoader";
+
 const Leave = () => {
+  useEndPageLoader();
+
   return (
     <div className="dashboard-main">
       <div className="row">

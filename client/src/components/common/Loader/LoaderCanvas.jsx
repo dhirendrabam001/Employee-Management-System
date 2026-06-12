@@ -1,26 +1,19 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
 import Cube from "./Cube";
 
 const LoaderCanvas = () => {
   return (
     <Canvas
-      camera={{ position: [4, 4, 4], fov: 45 }}
-      style={{
-        height: "100vh",
-        background: "transparent",
-      }}
+      className="cube-loader-canvas"
+      camera={{ position: [2.6, 2.6, 2.6], fov: 42 }}
+      gl={{ alpha: true, antialias: true }}
+      dpr={[1, 2]}
     >
-      {/* Lights */}
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <pointLight position={[-5, -5, -5]} intensity={0.5} color="#7CFF00" />
-
-      {/* Cube */}
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[4, 4, 4]} intensity={0.9} color="#e0e7ff" />
+      <pointLight position={[-3, -2, -3]} intensity={0.45} color="#6366f1" />
+      <pointLight position={[2, 2, 2]} intensity={0.35} color="#818cf8" />
       <Cube />
-
-      {/* Optional controls (disable zoom for loader) */}
-      <OrbitControls enableZoom={false} enablePan={false} />
     </Canvas>
   );
 };

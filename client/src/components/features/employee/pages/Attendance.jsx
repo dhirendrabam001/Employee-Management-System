@@ -1,6 +1,10 @@
 import Sidebar from "../../../common/Sidebar";
 import AttendanceDetails from "../components/AttendanceDetails";
+import useEndPageLoader from "../../../../hooks/useEndPageLoader";
+
 const Attendance = () => {
+  useEndPageLoader();
+
   return (
     <div className="dashboard-main">
       <div className="row">

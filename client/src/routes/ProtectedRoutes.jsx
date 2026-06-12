@@ -1,29 +1,25 @@
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const ProtectedRoutes = ({ children, role }) => {
-  const { user } = useSelector((store) => store.auth);
+  const { user, authChecking } = useSelector((store) => store.auth);
 
-  // don't redirect immediately on null
-  if (user === null) {
-    return null; // wait for useEffect to run
+  if (authChecking) {
+    return null;
   }
 
   if (!user) {
     if (role === "admin") {
-      return <Navigate to="/admin/login"></Navigate>;
-    } else {
-      return <Navigate to="/employee/login"></Navigate>;
+      return <Navigate to="/admin/login" />;
     }
+    return <Navigate to="/employee/login" />;
   }
 
   if (user.role !== role) {
     if (user.role === "admin") {
-      return <Navigate to="/admin/dashboard"></Navigate>;
-    } else {
-      return <Navigate to="/employee/dashboard"></Navigate>;
+      return <Navigate to="/admin/dashboard" />;
     }
+    return <Navigate to="/employee/dashboard" />;
   }
 
   return children;

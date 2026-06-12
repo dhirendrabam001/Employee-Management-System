@@ -1,7 +1,10 @@
 import Sidebar from "../../../common/Sidebar";
 import SettingDetails from "../components/SettingsDetails";
+import useEndPageLoader from "../../../../hooks/useEndPageLoader";
 
 const Settings = () => {
+  useEndPageLoader();
+
   return (
     <div className="dashboard-main">
       <div className="row">
