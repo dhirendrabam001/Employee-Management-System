@@ -1,0 +1,45 @@
+.cube-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  /* Solid bg — prevents dark sidebar bleeding through semi-transparent overlay */
+  background: #f8fafc;
+  isolation: isolate;
+}
+
+.cube-loader-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(150px, 30vmin, 220px);
+  aspect-ratio: 1;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.cube-loader-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cube-loader-text {
+  margin: 10px 0 0;
+  font-size: clamp(11px, 2.5vmin, 13px);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.cube-loader-text span {
+  color: #6366f1;
+}

@@ -1158,6 +1158,7 @@ body {
 }
 .btn-clock-in:hover {
   background: linear-gradient(135deg, #3730a3 0%, #312e81 100%);
+  color: #ffffff;
 }
 .btn-clock-icon {
   width: 44px;
@@ -1168,6 +1169,10 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
+  color: #ffffff;
+}
+.btn-clock-icon svg {
+  color: inherit;
 }
 .btn-clock-copy {
   display: flex;
@@ -1178,10 +1183,11 @@ body {
 .btn-clock-title {
   font-size: 1rem;
   font-weight: 700;
+  color: #ffffff;
 }
 .btn-clock-subtitle {
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
 }
 .employee-btn {
   margin-top: 40px;

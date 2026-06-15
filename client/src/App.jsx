@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 
 import HeroSection from "./features/home/pages/HeroSection";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import LoginSection from "./components/auth/pages/LoginSection";
 import SignUpSection from "./components/auth/pages/SignUpSection";
 import PasswordSection from "./components/auth/pages/PasswordSection";
@@ -19,8 +19,10 @@ import ProtectedRoutes from "./routes/ProtectedRoutes";
 import { useEffect } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "./utils/constantUrl";
-import { setUser } from "./redux/authSlice";
+import { setAuthChecking, setUser } from "./redux/authSlice";
+import { setPageLoading } from "./redux/loaderSlice";
 import { showError } from "./utils/toast";
+import { shouldShowRouteLoader } from "./utils/loaderRoutes";
 import Dashboard from "./components/features/admin/pages/Dashboard";
 import Employees from "./components/features/admin/pages/Employees";
 import Leave from "./components/features/admin/pages/Leave";
@@ -36,21 +38,37 @@ import Attendance from "./components/features/employee/pages/Attendance";
 
 function App() {
   const dispatch = useDispatch();
-  const { loading } = useSelector((store) => store.auth);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { authChecking } = useSelector((store) => store.auth);
+  const { pageLoading } = useSelector((store) => store.loader);
+  const showLoader =
+    pageLoading || (authChecking && shouldShowRouteLoader(location.pathname));
+
+  useEffect(() => {
+    if (shouldShowRouteLoader(location.pathname)) {
+      dispatch(setPageLoading(true));
+    }
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
+          validateStatus: () => true,
         });
 
-        dispatch(setUser(res.data.user));
+        if (res.status === 200) {
+          dispatch(setUser(res.data.user));
+        } else {
+          dispatch(setUser(null));
+        }
       } catch (error) {
         dispatch(setUser(null));
-        if (error.response?.status === 401) {
-          showError(error?.data?.response?.message);
-        }
+        showError(error.response?.data?.message || "Unable to verify session");
+      } finally {
+        dispatch(setAuthChecking(false));
       }
     };
     fetchUser();
@@ -58,7 +76,7 @@ function App() {
 
   return (
     <>
-      {loading && <CubeLoader />}
+      {showLoader && <CubeLoader />}
       <div className="full-layout">
         <ToastContainer
           position="top-right"

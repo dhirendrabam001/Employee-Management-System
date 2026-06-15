@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { setPayslip } from "../../../../redux/payslipSlice";
 
 const PayslipsModal = () => {
-  useGetEmployee();
+  useGetEmployee({ showLoader: false });
   const { employee } = useSelector((store) => store.employee);
   console.log("employee", employee);
 
