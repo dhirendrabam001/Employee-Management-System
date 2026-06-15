@@ -43,8 +43,7 @@ function App() {
   const { authChecking } = useSelector((store) => store.auth);
   const { pageLoading } = useSelector((store) => store.loader);
   const showLoader =
-    pageLoading ||
-    (authChecking && shouldShowRouteLoader(location.pathname));
+    pageLoading || (authChecking && shouldShowRouteLoader(location.pathname));
 
   useEffect(() => {
     if (shouldShowRouteLoader(location.pathname)) {
@@ -57,22 +56,23 @@ function App() {
       try {
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
+          validateStatus: () => true,
         });
 
-        dispatch(setUser(res.data.user));
+        if (res.status === 200) {
+          dispatch(setUser(res.data.user));
+        } else {
+          dispatch(setUser(null));
+        }
       } catch (error) {
         dispatch(setUser(null));
-
-        if (error.response?.status === 401) {
-          showError(error?.data?.response?.message);
-          navigate("/");
-        }
+        showError(error.response?.data?.message || "Unable to verify session");
       } finally {
         dispatch(setAuthChecking(false));
       }
     };
     fetchUser();
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   return (
     <>

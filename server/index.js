@@ -11,7 +11,7 @@ const app = express();
 // cors used
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://192.168.1.69:5173"],
+    origin: ["http://localhost:5173"],
     credentials: true,
   }),
 );
@@ -25,11 +25,13 @@ app.use(cookieParser());
 const userRoutes = require("./routes/user.routes");
 const employeeRoutes = require("./routes/employee.routes");
 const payslipsRoutes = require("./routes/payslips.routes");
+const attendanceRoutes = require("./routes/attendance.routes");
 
 // apis
 app.use("/api/user", userRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/payslips", payslipsRoutes);
+app.use("/api/attendance", attendanceRoutes);
 const port = process.env.PORT || 9000;
 
 app.listen(port, () => {
