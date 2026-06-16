@@ -1,12 +1,11 @@
 const express = require("express");
 const {
-  attendance,
+  clockIn,
   getAllAttendace,
 } = require("../controllers/attendance.controller");
 const auth = require("../middleware/auth");
 const router = express.Router();
-
-router.post("/attendanceData", auth, attendance);
+router.post("/attendanceData", auth, clockIn);
 router.get("/getAllAttendance", auth, getAllAttendace);
 
 module.exports = router;

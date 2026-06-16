@@ -1,26 +1,13 @@
 const { Attendance } = require("../models/employee.attendance.model");
 const { User } = require("../models/user.model");
 
-const attendance = async (req, res) => {
+const clockIn = async (req, res) => {
   try {
     const employeeId = req.user.id;
-    const {
-      taskProject,
-      attendanceDate,
-      clockInTime,
-      workLocation,
-      shiftTime,
-      notes,
-    } = req.body;
+    const { taskProject, workLocation, shiftTime, notes } = req.body;
 
     // all field are required validation
-    if (
-      !taskProject ||
-      !attendanceDate ||
-      !clockInTime ||
-      !workLocation ||
-      !shiftTime
-    ) {
+    if (!taskProject || !workLocation || !shiftTime) {
       return res
         .status(400)
         .json({ success: false, message: "Please all field are requried" });
@@ -60,23 +47,101 @@ const attendance = async (req, res) => {
     const attendance = await Attendance.create({
       employee: employeeId,
       taskProject,
-      attendanceDate,
-      clockInTime,
+      attendanceDate: new Date(),
+      clockInTime: new Date(),
       workLocation,
       shiftTime,
       notes,
+      isClockedIn: true,
     });
 
     return res.status(201).json({
       success: true,
       attendance,
-      message: "Attendance marked successfully!",
+      message: "Clock in successfully",
     });
   } catch (error) {
     console.error(error);
     return res
       .status(500)
       .json({ success: false, message: "Internal server error!" });
+  }
+};
+
+// clock out attendace
+const clockOut = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+
+    const attendance = await Attendance.findOne({
+      employee: employeeId,
+      isClockedIn: true,
+    });
+
+    if (!attendance) {
+      return res.status(404).json({
+        success: false,
+        message: "No active attendance found",
+      });
+    }
+
+    const clockOutTime = new Date();
+
+    const totalMilliseconds = clockOutTime - attendance.clockInTime;
+
+    const totalWorkingHrs = totalMilliseconds / (1000 * 60 * 60);
+
+    attendance.clockOutTime = clockOutTime;
+    attendance.totalWorkingHrs = Number(totalWorkingHrs.toFixed(2));
+    attendance.isClockedIn = false;
+
+    await attendance.save();
+
+    return res.status(200).json({
+      success: true,
+      attendance,
+      message: "Clock out successful",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+// get today attendance
+const getTodayAttendance = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const attendance = await Attendance.findOne({
+      employee: employeeId,
+      attendanceDate: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      attendance,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -109,6 +174,8 @@ const getAllAttendace = async (req, res) => {
 };
 
 module.exports = {
-  attendance,
+  clockIn,
+  clockOut,
+  getTodayAttendance,
   getAllAttendace,
 };

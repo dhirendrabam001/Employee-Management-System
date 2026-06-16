@@ -99,34 +99,6 @@ const AttendanceModal = () => {
                 </div>
                 <div className="col-12 col-md-6 col-lg-6">
                   <div className="mb-3">
-                    <label htmlFor="attendanceDate" className="form-label">
-                      Date
-                    </label>
-                    <input
-                      type="date"
-                      name="attendanceDate"
-                      onChange={changeHandler}
-                      value={input.attendanceDate}
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-                <div className="col-12 col-md-6 col-lg-6">
-                  <div className="mb-3">
-                    <label htmlFor="clockInTime" className="form-label">
-                      Clock In Time
-                    </label>
-                    <input
-                      type="time"
-                      name="clockInTime"
-                      onChange={changeHandler}
-                      value={input.clockInTime}
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-                <div className="col-12 col-md-6 col-lg-6">
-                  <div className="mb-3">
                     <label htmlFor="workLocation" className="form-label">
                       Work Location
                     </label>

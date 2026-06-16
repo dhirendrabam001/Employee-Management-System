@@ -4,6 +4,7 @@ const employeeAttendanceSchema = new mongoose.Schema(
     taskProject: {
       type: String,
       required: true,
+      trim: true,
     },
     employee: {
       type: mongoose.Schema.Types.ObjectId,
@@ -12,12 +13,20 @@ const employeeAttendanceSchema = new mongoose.Schema(
     },
     attendanceDate: {
       type: Date,
-      required: true,
       default: Date.now,
+      required: true,
     },
     clockInTime: {
-      type: String,
-      required: true,
+      type: Date,
+      default: null,
+    },
+    clockOutTime: {
+      type: Date,
+      default: null,
+    },
+    isClockedIn: {
+      type: Boolean,
+      default: false,
     },
     workLocation: {
       type: String,
@@ -31,6 +40,7 @@ const employeeAttendanceSchema = new mongoose.Schema(
     },
     notes: {
       type: String,
+      trim: true,
     },
     status: {
       type: String,
