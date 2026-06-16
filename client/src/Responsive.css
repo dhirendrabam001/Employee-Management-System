@@ -544,6 +544,142 @@
     width: 100%;
     max-width: 100%;
   }
+
+  .attendance-header-pro {
+    padding: 20px 16px;
+    padding-right: 58px;
+  }
+
+  .header-left-pro h2 {
+    font-size: 22px;
+  }
+
+  .header-left-pro p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .latest-date-pro {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+
+  .header-content-pro {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .clock-panel-card {
+    padding: 18px 16px;
+  }
+
+  .clock-panel-title {
+    font-size: 1rem;
+  }
+
+  .clock-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .clock-panel-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+  }
+
+  .clock-stat-timer h4 {
+    font-size: 1.45rem;
+  }
+
+  .clock-out-btn {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .attendance-activity-card {
+    padding: 18px 14px;
+  }
+
+  .attendance-activity-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .attendance-avg-badge {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .attendance-stat-value {
+    font-size: 1.65rem;
+  }
+
+  .attendance-table-pro thead {
+    display: none;
+  }
+
+  .attendance-table-pro tbody tr {
+    display: block;
+    margin-bottom: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: #ffffff;
+  }
+
+  .attendance-table-pro tbody tr.attendance-empty-row {
+    display: table-row;
+    border: none;
+    padding: 0;
+    margin-bottom: 0;
+    background: transparent;
+  }
+
+  .attendance-table-pro tbody td.attendance-empty-cell {
+    display: table-cell;
+    padding: 0;
+    border: none;
+    text-align: center;
+  }
+
+  .attendance-table-pro tbody td.attendance-empty-cell::before {
+    display: none;
+  }
+
+  .attendance-table-pro tbody tr:hover {
+    background: #ffffff;
+  }
+
+  .attendance-table-pro tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: right;
+  }
+
+  .attendance-table-pro tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .attendance-table-pro tbody td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #64748b;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  .attendance-empty-state {
+    padding: 32px 16px;
+  }
 }
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
@@ -569,6 +705,34 @@
   }
   .login-main .card p {
     margin-left: 14px;
+  }
+}
+
+/* Attendance header — tablet & mobile */
+@media (max-width: 991.98px) {
+  .attendance-header-pro {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding-right: 58px;
+  }
+
+  .attendance-header-meta {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .latest-date-pro {
+    width: 100%;
+    white-space: normal;
+    justify-content: flex-start;
+  }
+
+  .btn-clock-in-pro {
+    width: 100%;
+    justify-content: center;
   }
 }
 

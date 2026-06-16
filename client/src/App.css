@@ -2886,6 +2886,12 @@ body {
   padding: 10px 12px;
   color: #0f172a;
 }
+
+/* Allow textarea inside modal to size by rows instead of fixed height */
+.modal-body textarea.form-control {
+  height: auto;
+  min-height: 100px;
+}
 .password-setting span {
   margin-top: 14px;
   margin-right: 13px !important;
@@ -2920,3 +2926,509 @@ body {
 }
 
 /* settings page css end */
+
+/* employee css */
+.attendance-header-pro {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.92) 0%,
+    rgba(139, 92, 246, 0.92) 100%
+  );
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.attendance-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.header-content-pro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-left-pro {
+  color: white;
+  flex: 1;
+}
+
+.header-left-pro h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.header-left-pro p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-weight: 400;
+}
+
+.latest-date-pro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 12px 18px;
+  color: white;
+  font-weight: 500;
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+}
+
+.latest-date-pro svg {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.btn-clock-in-pro {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-clock-in-pro:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.btn-clock-in-pro:active {
+  transform: translateY(-1px);
+}
+
+.btn-clock-in-pro svg {
+  font-size: 16px;
+}
+
+/* clock in / out panel */
+.clock-panel-wrap {
+  margin-bottom: 28px;
+}
+
+.clock-panel-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.clock-panel-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.clock-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.clock-panel-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #050c1f;
+  margin-bottom: 4px;
+}
+
+.clock-panel-subtitle {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.clock-panel-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #eef2ff;
+  color: #4338ca;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.clock-stat-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  height: 100%;
+}
+
+.clock-stat-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.clock-stat-status small,
+.clock-stat-timer small {
+  display: block;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.clock-stat-status h6 {
+  margin: 0;
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.clock-stat-timer {
+  text-align: center;
+}
+
+.clock-stat-timer h4 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #050c1f;
+  letter-spacing: 0.04em;
+}
+
+.clock-timer-label {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+.clock-status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+  flex-shrink: 0;
+}
+
+.clock-panel-action {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.clock-action-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #050c1f;
+  margin-bottom: 16px;
+}
+
+.clock-out-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 14px 28px rgba(220, 38, 38, 0.22);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.clock-out-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(220, 38, 38, 0.28);
+  color: #ffffff;
+}
+
+.clock-started-at {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* attendance page — professional layout */
+.attendance-page .attendance-page-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 8px;
+}
+
+.attendance-stats-grid {
+  margin-bottom: 28px;
+}
+
+.attendance-stat-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 22px 20px;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+  border-left: 4px solid #6366f1;
+  height: 100%;
+}
+
+.attendance-stat-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 20px 36px rgba(15, 23, 42, 0.09);
+}
+
+.attendance-stat-indigo {
+  border-left-color: #6366f1;
+}
+
+.attendance-stat-amber {
+  border-left-color: #f59e0b;
+}
+
+.attendance-stat-emerald {
+  border-left-color: #10b981;
+}
+
+.attendance-stat-label {
+  margin: 0 0 6px;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.attendance-stat-value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #050c1f;
+  line-height: 1.1;
+}
+
+.attendance-stat-hint {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.attendance-stat-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.attendance-stat-amber .attendance-stat-icon {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.attendance-stat-emerald .attendance-stat-icon {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.attendance-activity-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.attendance-activity-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.attendance-activity-head h5 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #050c1f;
+}
+
+.attendance-activity-head p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.attendance-avg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+  border: 1px solid #e0e7ff;
+}
+
+.attendance-avg-badge span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.attendance-avg-badge strong {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #4338ca;
+}
+
+.attendance-table-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+.attendance-table-pro thead {
+  background: #f8fafc;
+}
+
+.attendance-table-pro thead th {
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 16px;
+  white-space: nowrap;
+}
+
+.attendance-table-pro tbody td {
+  padding: 16px;
+  color: #334155;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.attendance-table-pro tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.attendance-table-pro tbody tr:hover {
+  background: #fafbff;
+}
+
+.attendance-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.attendance-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 1.6rem;
+}
+
+.attendance-empty-state h6 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #050c1f;
+}
+
+.attendance-empty-state p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  max-width: 320px;
+  margin-inline: auto;
+}
+
+.attendance-empty-state strong {
+  color: #4338ca;
+}
+
+.attendance-table-pro tbody tr.attendance-empty-row {
+  display: table-row;
+  border: none;
+  padding: 0;
+  margin-bottom: 0;
+  background: transparent;
+}
+
+.attendance-table-pro tbody td.attendance-empty-cell {
+  display: table-cell;
+  padding: 0;
+  border: none;
+}
+
+.attendance-table-pro tbody td.attendance-empty-cell::before {
+  display: none;
+}
+
+/* clockinout end */

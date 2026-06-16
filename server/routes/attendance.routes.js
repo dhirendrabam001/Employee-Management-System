@@ -1,8 +1,12 @@
 const express = require("express");
-const { attendance } = require("../controllers/attendance.controller");
-
+const {
+  attendance,
+  getAllAttendace,
+} = require("../controllers/attendance.controller");
+const auth = require("../middleware/auth");
 const router = express.Router();
 
-router.post("/attendanceData", attendance);
+router.post("/attendanceData", auth, attendance);
+router.get("/getAllAttendance", auth, getAllAttendace);
 
 module.exports = router;
