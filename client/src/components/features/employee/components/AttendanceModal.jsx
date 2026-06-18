@@ -46,7 +46,7 @@ const AttendanceModal = () => {
 
       const res = await promise;
       if (res.data.success) {
-        dispatch(setAttendance([...attendance, res.data.attendance]));
+        dispatch(setAttendance(res.data.attendance));
         navigate("/employee/attendance");
       }
     } catch (error) {

@@ -21,12 +21,13 @@ const clockIn = async (req, res) => {
         .json({ success: false, message: "Employee is not found" });
     }
 
-    // prevent duplicate data(same data)
-    const startOfDay = new Date(attendanceDate);
+    // prevent duplicate data(same data) - use today's date range
+    const today = new Date();
+    const startOfDay = new Date(today);
     startOfDay.setHours(0, 0, 0, 0);
 
     // end of date
-    const endOfDate = new Date(attendanceDate);
+    const endOfDate = new Date(today);
     endOfDate.setHours(23, 59, 59, 999);
 
     // check attendance already or
@@ -117,10 +118,11 @@ const getTodayAttendance = async (req, res) => {
   try {
     const employeeId = req.user.id;
 
-    const startOfDay = new Date();
+    const today = new Date();
+    const startOfDay = new Date(today);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date();
+    const endOfDay = new Date(today);
     endOfDay.setHours(23, 59, 59, 999);
 
     const attendance = await Attendance.findOne({
