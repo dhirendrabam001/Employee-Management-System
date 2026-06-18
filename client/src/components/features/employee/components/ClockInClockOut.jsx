@@ -1,9 +1,12 @@
 import { FaRegClock } from "react-icons/fa";
 import { BsFillStopFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const ClockInClockOut = () => {
+  const [timer, setTimer] = useState("00:00:00");
   const { user } = useSelector((store) => store.auth);
+  const { attendance } = useSelector((store) => store.attendance);
   const firstName = user?.fullName?.split(" ")[0] || "User";
 
   return (
