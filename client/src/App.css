@@ -886,17 +886,103 @@ body {
 }
 
 /* admin dashboard sidebar */
+:root {
+  --sidebar-width: 260px;
+}
+
 .dashboard-main {
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
   background: #fbfcfc;
 }
+
+/* Left column — holds space for fixed sidebar */
+.sidebar-aside {
+  width: 100%;
+}
+
+/* Fixed sidebar — stays in place when page scrolls */
 .sidebar-main {
   background: #050c1f;
+  width: var(--sidebar-width);
+  height: 100vh;
+  padding: 28px 18px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+}
+
+.sidebar-divider {
+  border-color: rgba(255, 255, 255, 0.1);
+  margin: 14px 0;
+  opacity: 1;
+}
+
+/* Middle menu — scrolls only if many links */
+.sidebar-menu {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 0 12px;
+}
+
+.sidebar-menu-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 0 0 8px 6px;
+}
+
+/* Logout — always at bottom */
+.sidebar-bottom {
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-logout-btn {
   width: 100%;
-  min-height: 100%;
-  padding: 50px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 8px;
+  background: rgba(127, 29, 29, 0.25);
+  color: #fecaca;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar-logout-btn:hover {
+  background: rgba(185, 28, 28, 0.45);
+  border-color: rgba(248, 113, 113, 0.6);
+  color: #fff;
+}
+
+/* Desktop — sidebar fixed, right content scrolls */
+@media (min-width: 992px) {
+  .dashboard-main > .row > div:first-child {
+    flex: 0 0 var(--sidebar-width) !important;
+    max-width: var(--sidebar-width) !important;
+    width: var(--sidebar-width) !important;
+  }
+
+  .dashboard-main > .row > div:last-child {
+    flex: 1 1 auto !important;
+    max-width: calc(100% - var(--sidebar-width)) !important;
+  }
 }
 .icon-dashboard .icon {
   font-size: 30px;
@@ -3430,5 +3516,161 @@ body {
 .attendance-table-pro tbody td.attendance-empty-cell::before {
   display: none;
 }
+.project-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 
+.project-title {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.project-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-timer {
+  font-size: 12px;
+  padding: 0px 5px;
+  border-radius: 6px;
+  color: #004e30;
+  cursor: pointer !important;
+  transition: 0.2s;
+  font-weight: bold;
+  border: none;
+  background: none;
+}
+
+.btn-timer:hover:not(:disabled) {
+  color: #4338ca;
+}
+
+.btn-timer-stop {
+  color: #dc2626;
+}
+
+.btn-timer-stop:hover {
+  color: #b91c1c;
+}
+
+.btn-timer:disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+}
+
+.attendance-row-active {
+  background: #fafbff;
+}
+
+.attendance-row-active td:first-child {
+  box-shadow: inset 3px 0 0 #6366f1;
+}
+
+.btn-clock-in-pro:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-edit {
+  font-size: 12px;
+  padding: 0px 6px;
+  border-radius: 6px;
+  color: #0071f8;
+  border: none;
+  background: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-edit:hover {
+  color: greenyellow;
+}
 /* clockinout end */
+
+/* employee leave css start */
+.leave-heading h2 {
+  font-size: var(--h2-size);
+  color: var(--h2-color);
+  font-weight: 600;
+}
+.leave-heading p {
+  color: var(--p-color);
+  font-size: var(--p-size);
+}
+.leave-card {
+  margin-top: 20px;
+}
+
+.leave-card-box {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.leave-card-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+.leave-card-box::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: linear-gradient(180deg, #0d6efd, #004e30);
+  border-radius: 10px 0 0 10px;
+}
+
+.leave-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 12px;
+  background: rgba(13, 110, 253, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #0d6efd;
+}
+
+.leave-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.leave-content h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #212529;
+}
+
+.leave-card-box:nth-child(2) .leave-icon {
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.leave-card-box:nth-child(3) .leave-icon {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+/* employee leave css end */

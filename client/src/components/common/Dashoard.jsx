@@ -1,12 +1,12 @@
-import React from "react";
-import { useSelector } from "react-redux";
+// import React from "react";
+// import { useSelector } from "react-redux";
 
-const Dashoard = () => {
-  const { user } = useSelector((store) => store.auth);
+// const Dashoard = () => {
+//   const { user } = useSelector((store) => store.auth);
 
-  const adminDashboard = [{}];
+//   const adminDashboard = [{}];
 
-  return <div></div>;
-};
+//   return <div></div>;
+// };
 
-export default Dashoard;
+// export default Dashoard;

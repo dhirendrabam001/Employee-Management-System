@@ -19,6 +19,12 @@ const auth = async (req, res, next) => {
     // console.log("decoded", decoded);
   } catch (error) {
     console.error(error);
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      path: "/",
+    });
     return res
       .status(401)
       .json({ success: false, message: "Token expired, please login again!" });

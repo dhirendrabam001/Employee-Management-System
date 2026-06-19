@@ -1,8 +1,8 @@
 import Sidebar from "../../../common/Sidebar";
-import AttendanceDetails from "../components/AttendanceDetails";
 import useEndPageLoader from "../../../../hooks/useEndPageLoader";
+import LeaveEmployeeDetails from "../components/LeaveEmployeeDetails";
 
-const Attendance = () => {
+const LeaveEmployee = () => {
   useEndPageLoader();
 
   return (
@@ -13,7 +13,7 @@ const Attendance = () => {
         </div>
         <div className="col-12 col-md-10 col-lg-10">
           <div className="dashboard-right">
-            <AttendanceDetails />
+            <LeaveEmployeeDetails />
           </div>
         </div>
       </div>
@@ -21,4 +21,4 @@ const Attendance = () => {
   );
 };
 
-export default Attendance;
+export default LeaveEmployee;

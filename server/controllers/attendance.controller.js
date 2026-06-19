@@ -69,6 +69,59 @@ const clockIn = async (req, res) => {
   }
 };
 
+// start timer for a specific attendance row
+const startTimer = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+    const { id } = req.params;
+
+    const record = await Attendance.findOne({ _id: id, employee: employeeId });
+    if (!record) {
+      return res.status(404).json({
+        success: false,
+        message: "Attendance record not found",
+      });
+    }
+
+    if (record.isClockedIn) {
+      return res.status(400).json({
+        success: false,
+        message: "Timer is already running for this record",
+      });
+    }
+
+    const otherActive = await Attendance.findOne({
+      employee: employeeId,
+      isClockedIn: true,
+      _id: { $ne: id },
+    });
+
+    if (otherActive) {
+      return res.status(400).json({
+        success: false,
+        message: "Please stop the current timer first",
+      });
+    }
+
+    record.isClockedIn = true;
+    record.clockInTime = new Date();
+    record.clockOutTime = null;
+    await record.save();
+
+    return res.status(200).json({
+      success: true,
+      attendance: record,
+      message: "Timer started successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 // clock out attendace
 const clockOut = async (req, res) => {
   try {
@@ -101,7 +154,7 @@ const clockOut = async (req, res) => {
     return res.status(200).json({
       success: true,
       attendance,
-      message: "Clock out successful",
+      message: "Clock out successfully",
     });
   } catch (error) {
     console.error(error);
@@ -156,12 +209,6 @@ const getAllAttendace = async (req, res) => {
       attendanceDate: -1,
     });
 
-    if (!attendance) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Attendance data is found" });
-    }
-
     return res.status(200).json({
       success: true,
       attendance,
@@ -178,6 +225,7 @@ const getAllAttendace = async (req, res) => {
 module.exports = {
   clockIn,
   clockOut,
+  startTimer,
   getTodayAttendance,
   getAllAttendace,
 };

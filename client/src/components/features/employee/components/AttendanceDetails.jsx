@@ -4,8 +4,17 @@ import { FaFileAlt, FaClipboardList } from "react-icons/fa";
 import { HiCurrencyDollar } from "react-icons/hi2";
 import AttendanceModal from "./AttendanceModal";
 import useGetAllAttendance from "../../../../hooks/useGetAllAttendance";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ClockInClockOut from "./ClockInClockOut";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { ATTENDANCE_API_END_POINT } from "../../../../utils/constantUrl";
+import {
+  formatClockTime,
+  formatWorkingHrs,
+  getActiveAttendance,
+  refreshAttendanceList,
+} from "../../../../utils/attendanceHelpers";
 
 const formatToday = () =>
   new Date().toLocaleDateString("en-IN", {
@@ -48,7 +57,9 @@ const statsConfig = [
 
 const AttendanceDetails = () => {
   useGetAllAttendance();
+  const dispatch = useDispatch();
   const { attendance } = useSelector((store) => store.attendance);
+  const activeAttendance = getActiveAttendance(attendance);
 
   const daysPresent = attendance.filter((item) =>
     item.status?.toLowerCase().includes("present"),
@@ -58,6 +69,67 @@ const AttendanceDetails = () => {
     present: daysPresent || attendance.length,
     leaves: 15,
     payslips: 10,
+  };
+
+  const handleStartTimer = async (id) => {
+    try {
+      const promise = axios.post(
+        `${ATTENDANCE_API_END_POINT}/startTimer/${id}`,
+        {},
+        { withCredentials: true },
+      );
+
+      toast.promise(promise, {
+        pending: "Starting timer...",
+        success: "Timer started",
+        error: {
+          render({ data }) {
+            return data?.response?.data?.message || "Failed to start timer";
+          },
+        },
+      });
+
+      const res = await promise;
+      if (res.data.success) {
+        await refreshAttendanceList(dispatch);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleStopTimer = async () => {
+    try {
+      const promise = axios.post(
+        `${ATTENDANCE_API_END_POINT}/clockOut`,
+        {},
+        { withCredentials: true },
+      );
+
+      toast.promise(promise, {
+        pending: "Stopping timer...",
+        success: "Timer stopped",
+        error: {
+          render({ data }) {
+            return data?.response?.data?.message || "Failed to stop timer";
+          },
+        },
+      });
+
+      const res = await promise;
+      if (res.data.success) {
+        await refreshAttendanceList(dispatch);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getWorkingHrsDisplay = (item) => {
+    if (item.isClockedIn && item._id === activeAttendance?._id) {
+      return "Running...";
+    }
+    return formatWorkingHrs(item.totalWorkingHrs);
   };
 
   return (
@@ -80,6 +152,7 @@ const AttendanceDetails = () => {
                 data-bs-toggle="modal"
                 data-bs-target="#attendanceModal"
                 className="btn-clock-in-pro"
+                disabled={Boolean(activeAttendance)}
               >
                 <FaArrowRightLong />
                 <span>Clock In</span>
@@ -160,20 +233,54 @@ const AttendanceDetails = () => {
                           month: "short",
                           year: "numeric",
                         });
+                        const isActive = item.isClockedIn === true;
 
                         return (
-                          <tr key={item._id}>
+                          <tr
+                            key={item._id}
+                            className={isActive ? "attendance-row-active" : ""}
+                          >
                             <td data-label="Date">{formattedDate}</td>
-                            <td data-label="Project">{item.taskProject}</td>
-                            <td data-label="Clock In">{item.clockInTime}</td>
+                            <td data-label="Project">
+                              <div className="project-cell">
+                                <div className="project-title">
+                                  {item.taskProject}
+                                </div>
+                                <div className="project-actions">
+                                  {isActive ? (
+                                    <button
+                                      type="button"
+                                      className="btn-timer btn-timer-stop"
+                                      onClick={handleStopTimer}
+                                    >
+                                      Stop Timer
+                                    </button>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      className="btn-timer"
+                                      onClick={() => handleStartTimer(item._id)}
+                                      disabled={Boolean(activeAttendance)}
+                                    >
+                                      Start Timer
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+                            <td data-label="Clock In">
+                              {formatClockTime(item.clockInTime)}
+                            </td>
                             <td data-label="Shift">{item.shiftTime}</td>
                             <td data-label="Location">{item.workLocation}</td>
-                            <td data-label="Working Hrs">8h 45m</td>
+                            <td data-label="Working Hrs">
+                              {getWorkingHrsDisplay(item)}
+                            </td>
                             <td data-label="Status">
                               <span
                                 className={`status-pill ${getStatusClass(item.status)}`}
                               >
-                                {item.status}
+                                {isActive ? "Active" : item.status}
                               </span>
                             </td>
                             <td data-label="Notes">{item.notes || "—"}</td>

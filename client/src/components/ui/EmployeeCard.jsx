@@ -1,14 +1,15 @@
 import { useSelector } from "react-redux";
-import { FiUsers } from "react-icons/fi";
 import {
-  FaBuildingUser,
+ 
   FaCalendarCheck,
   FaArrowRightLong,
 } from "react-icons/fa6";
 import { FaFileAlt } from "react-icons/fa";
 import { HiCurrencyDollar } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeCard = () => {
+  const navigate = useNavigate();
   const { user } = useSelector((store) => store.auth);
   const formatRole = user?.role
     ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
@@ -58,7 +59,7 @@ const EmployeeCard = () => {
 
         <div className="employee-btn d-flex align-items-center gap-3">
           <div className="mark-btn">
-            <button type="submit" className="d-flex align-items-center gap-3">
+            <button type="submit" onClick={() => navigate("/employee/attendance")} className="d-flex align-items-center gap-3">
               Mark Attendance <FaArrowRightLong className="mt-1" />
             </button>
           </div>

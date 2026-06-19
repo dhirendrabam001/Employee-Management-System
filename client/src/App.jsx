@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 
 import HeroSection from "./features/home/pages/HeroSection";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import LoginSection from "./components/auth/pages/LoginSection";
 import SignUpSection from "./components/auth/pages/SignUpSection";
 import PasswordSection from "./components/auth/pages/PasswordSection";
@@ -21,7 +21,7 @@ import axios from "axios";
 import { USER_API_END_POINT } from "./utils/constantUrl";
 import { setAuthChecking, setUser } from "./redux/authSlice";
 import { setPageLoading } from "./redux/loaderSlice";
-import { showError } from "./utils/toast";
+import { handleSessionExpired } from "./utils/sessionExpired";
 import { shouldShowRouteLoader } from "./utils/loaderRoutes";
 import Dashboard from "./components/features/admin/pages/Dashboard";
 import Employees from "./components/features/admin/pages/Employees";
@@ -35,10 +35,10 @@ import CubeLoader from "./components/common/Loader/CubeLoader";
 
 // employee pages
 import Attendance from "./components/features/employee/pages/Attendance";
+import LeaveEmployee from "./components/features/employee/pages/LeaveEmployee";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
   const { authChecking } = useSelector((store) => store.auth);
   const { pageLoading } = useSelector((store) => store.loader);
@@ -61,12 +61,19 @@ function App() {
 
         if (res.status === 200) {
           dispatch(setUser(res.data.user));
+        } else if (res.status === 401) {
+          dispatch(setUser(null));
+
+          // Token expired → go to home page
+          const msg = res.data?.message || "";
+          if (msg.toLowerCase().includes("expired")) {
+            await handleSessionExpired(msg);
+          }
         } else {
           dispatch(setUser(null));
         }
-      } catch (error) {
+      } catch {
         dispatch(setUser(null));
-        showError(error.response?.data?.message || "Unable to verify session");
       } finally {
         dispatch(setAuthChecking(false));
       }
@@ -104,14 +111,46 @@ function App() {
           <Route path="/verify" element={<VerifyAccountSection />}></Route>
 
           {/* admin pages */}
-          <Route path="/admin/employees" element={<Employees />} />
-          <Route path="/admin/leave" element={<Leave />}></Route>
-          <Route path="/admin/payslips" element={<Payslips />}></Route>
+          <Route
+            path="/admin/employees"
+            element={
+              <ProtectedRoutes role="admin">
+                <Employees />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/admin/leave"
+            element={
+              <ProtectedRoutes role="admin">
+                <Leave />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/admin/payslips"
+            element={
+              <ProtectedRoutes role="admin">
+                <Payslips />
+              </ProtectedRoutes>
+            }
+          />
           <Route
             path="/admin/payslip/print/:id"
-            element={<PrintPayslip />}
-          ></Route>
-          <Route path="/admin/setting" element={<Settings />}></Route>
+            element={
+              <ProtectedRoutes role="admin">
+                <PrintPayslip />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/admin/setting"
+            element={
+              <ProtectedRoutes role="admin">
+                <Settings />
+              </ProtectedRoutes>
+            }
+          />
 
           {/* employee routes */}
           <Route
@@ -127,6 +166,14 @@ function App() {
             }
           ></Route>
           <Route
+            path="/employee/leave"
+            element={
+              <ProtectedRoutes role="employee">
+                <LeaveEmployee />
+              </ProtectedRoutes>
+            }
+          ></Route>
+          <Route
             path="/employee/password"
             element={<EmployeePasswordSection />}
           ></Route>
@@ -137,7 +184,14 @@ function App() {
           ></Route>
 
           {/* Employee pages */}
-          <Route path="/employee/attendance" element={<Attendance />}></Route>
+          <Route
+            path="/employee/attendance"
+            element={
+              <ProtectedRoutes role="employee">
+                <Attendance />
+              </ProtectedRoutes>
+            }
+          />
         </Routes>
       </div>
     </>

@@ -27,10 +27,12 @@ const Sidebar = () => {
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
 
+  // Close mobile menu when route changes
   useEffect(() => {
-    // setIsOpen(false);
+    
   }, [location.pathname]);
 
+  // Stop page scroll when mobile menu is open
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = "hidden";
@@ -42,13 +44,9 @@ const Sidebar = () => {
   const logoutHandler = async (e) => {
     e.preventDefault();
     try {
-      const promise = axios.get(
-        `${USER_API_END_POINT}/logout`,
-        {},
-        {
-          withCredentials: true,
-        },
-      );
+      const promise = axios.get(`${USER_API_END_POINT}/logout`, {
+        withCredentials: true,
+      });
 
       toast.promise(promise, {
         pending: "Logout...",
@@ -116,59 +114,65 @@ const Sidebar = () => {
         onClick={() => setIsOpen(false)}
       />
 
-      <div
-        className={`d-flex flex-column vh-100 flex-shrink-0 p-3 text-white sidebar-main ${
-          isOpen ? "sidebar-open" : ""
-        }`}
-      >
-        <button
-          type="button"
-          className="sidebar-close-btn"
-          onClick={() => setIsOpen(false)}
-          aria-label="Close menu"
+      <aside className="sidebar-aside">
+        <nav
+          className={`sidebar-main text-white ${isOpen ? "sidebar-open" : ""}`}
         >
-          <MdClose />
-        </button>
+          <button
+            type="button"
+            className="sidebar-close-btn"
+            onClick={() => setIsOpen(false)}
+            aria-label="Close menu"
+          >
+            <MdClose />
+          </button>
 
-      <div className="sidebar-heading d-flex align-items-center gap-2">
-        <div className="icon-dashboard">
-          <FiUser className="icon" />
-        </div>
-        <div className="sidebar-content">
-          <h6>Employee MS</h6>
-          <p>Employee Management</p>
-        </div>
-      </div>
-      <hr />
-      <DashboardCard />
-      {/* Navigation */}
-      <h6 className="text-uppercase mt-3">Navigation</h6>
-      <ul className="nav flex-column mt-2">
-        {menu.map((item, index) => (
-          <li className="nav-item" key={index}>
-            <Link
-              to={item.path}
-              onClick={() => setIsOpen(false)}
-              className={`nav-link d-flex align-items-center gap-2 text-white ${
-                location.pathname === item.path ? "active" : ""
-              }`}
+          <div className="sidebar-top">
+            <div className="sidebar-heading d-flex align-items-center gap-2">
+              <div className="icon-dashboard">
+                <FiUser className="icon" />
+              </div>
+              <div className="sidebar-content">
+                <h6>Employee MS</h6>
+                <p>Employee Management</p>
+              </div>
+            </div>
+            <hr className="sidebar-divider" />
+            <DashboardCard />
+          </div>
+
+          <div className="sidebar-menu">
+            <p className="sidebar-menu-label">Navigation</p>
+            <ul className="nav flex-column">
+              {menu.map((item, index) => (
+                <li className="nav-item" key={index}>
+                  <Link
+                    to={item.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`nav-link d-flex align-items-center gap-2 ${
+                      location.pathname === item.path ? "active" : ""
+                    }`}
+                  >
+                    {item.icon}
+                    <span>{item.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="sidebar-bottom">
+            <button
+              type="button"
+              className="sidebar-logout-btn"
+              onClick={logoutHandler}
             >
-              {item.icon}
-              <span>{item.name}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-auto">
-        <button
-          className="btn btn-outline-danger w-100 d-flex align-items-center gap-2 text-white fw-bold text-center"
-          onClick={logoutHandler}
-        >
-          <MdLogout /> Log out
-        </button>
-      </div>
-    </div>
+              <MdLogout />
+              <span>Log out</span>
+            </button>
+          </div>
+        </nav>
+      </aside>
     </>
   );
 };
