@@ -26,12 +26,14 @@ const userRoutes = require("./routes/user.routes");
 const employeeRoutes = require("./routes/employee.routes");
 const payslipsRoutes = require("./routes/payslips.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
+const leaveEmployeeRoutes = require("./routes/leaveEmployee.routes");
 
 // apis
 app.use("/api/user", userRoutes);
 app.use("/api/employee", employeeRoutes);
 app.use("/api/payslips", payslipsRoutes);
 app.use("/api/attendance", attendanceRoutes);
+app.use("/api/leave", leaveEmployeeRoutes);
 const port = process.env.PORT || 9000;
 
 app.listen(port, () => {

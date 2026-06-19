@@ -1960,7 +1960,7 @@ body {
 }
 
 .leave-content {
-  padding: 24px;
+  padding: 20px;
   color: #6b7280;
 }
 
@@ -3590,6 +3590,11 @@ body {
 .btn-edit:hover {
   color: greenyellow;
 }
+.modal-body .form-control::placeholder {
+  font-size: 13px;
+  color: #cacacb;
+  font-weight: 400;
+}
 /* clockinout end */
 
 /* employee leave css start */
@@ -3609,7 +3614,7 @@ body {
 .leave-card-box {
   background: #ffffff;
   border-radius: 14px;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -3673,4 +3678,245 @@ body {
   background: rgba(255, 193, 7, 0.1);
   color: #ffc107;
 }
+/* MODAL OVERLAY */
+.leaveModal .modal {
+  backdrop-filter: blur(6px);
+}
+
+/* MODAL DIALOG CENTERED */
+.leaveModal .modal-dialog {
+  max-width: 600px;
+  margin: 60px auto;
+}
+
+/* MODAL CONTENT */
+.leaveModal .modal-content {
+  border: none;
+  border-radius: 16px;
+  padding: 10px;
+  background: #ffffff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+/* HEADER */
+.leaveModal .modal-header {
+  border-bottom: none;
+  padding: 20px 20px 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+/* TITLE */
+.leaveModal .modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* SUBTITLE */
+.leaveModal .modal-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* CLOSE BUTTON */
+.leaveModal .btn-close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background-color: #f1f5f9;
+  border-radius: 50%;
+  padding: 8px;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.leaveModal .btn-close:hover {
+  background-color: #e2e8f0;
+  transform: rotate(90deg);
+}
+
+/* BODY */
+.leaveModal .modal-body {
+  padding: 5px 20px;
+}
+
+/* LABEL */
+.leaveModal .form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* INPUTS */
+.leaveModal .form-control {
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+/* INPUT FOCUS */
+.leaveModal .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* TEXTAREA */
+.leaveModal textarea.form-control {
+  resize: none;
+}
+
+/* REACT SELECT CUSTOM */
+.leaveModal .react-select__control {
+  border-radius: 10px !important;
+  border: 1px solid #e5e7eb !important;
+  padding: 4px;
+}
+
+.leaveModal .react-select__control--is-focused {
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
+}
+
+.leaveModal .react-select__menu {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* FOOTER */
+.leaveModal .modal-footer {
+  border-top: none;
+  padding: 10px 0px;
+}
+
+/* BUTTON */
+.leaveModal .btn-primary {
+  width: 100%;
+  padding: 12px;
+  font-weight: 600;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0d6efd, #004e30);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+/* BUTTON HOVER */
+.leaveModal .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(13, 110, 253, 0.3);
+}
+.css-13cymwt-control {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: default;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  min-height: 38px;
+  outline: 0 !important;
+  position: relative;
+  -webkit-transition: all 100ms;
+  transition: all 100ms;
+  background-color: hsl(0, 0%, 100%);
+  border-color: hsl(0deg 1.09% 91.24%) !important;
+  border-radius: 10px !important;
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  padding: 4px !important;
+}
+.leaveModal .mb-3 {
+  margin-bottom: 16px !important;
+}
+
+/* table */
+
+.leave-table-info {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.leave-table-info .table {
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.leave-table-info thead th {
+  border: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #6b7280;
+  font-weight: 600;
+  padding: 20px 10px;
+  background: #ededed;
+}
+.leave-table-info tbody tr {
+  background: #f9fafb;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.leave-table-info tbody tr:hover {
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+.leave-table-info tbody td {
+  border: none;
+  padding: 14px 12px;
+  vertical-align: middle;
+  font-size: 14px;
+  color: #374151;
+}
+
+.leave-table-info tbody tr td:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.leave-table-info tbody tr td:last-child {
+  border-radius: 0 10px 10px 0;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-approved {
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.status-pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #b45309;
+}
+
+.status-rejected {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
 /* employee leave css end */

@@ -213,13 +213,6 @@ const AttendanceModal = () => {
               </div>
               <div className="modal-footer px-0 pb-0">
                 <button
-                  type="button"
-                  className="btn btn-light"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button
                   type="submit"
                   className="btn btn-primary"
                   disabled={hasActiveTimer}
