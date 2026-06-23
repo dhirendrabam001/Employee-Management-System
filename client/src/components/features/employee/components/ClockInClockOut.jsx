@@ -96,9 +96,8 @@ const ClockInClockOut = () => {
               <div className="col-12 col-sm-6">
                 <div className="clock-stat-box clock-stat-status">
                   <span
-                    className={`clock-status-dot ${
-                      isRunning ? "" : "clock-status-dot--off"
-                    }`}
+                    className={`clock-status-dot ${isRunning ? "" : "clock-status-dot--off"
+                      }`}
                   ></span>
                   <div>
                     <small>Status</small>

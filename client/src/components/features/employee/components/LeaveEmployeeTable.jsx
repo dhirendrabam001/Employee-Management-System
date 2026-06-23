@@ -1,7 +1,11 @@
+import { useSelector } from "react-redux";
+
 const LeaveEmployeeTable = () => {
+  const { leave } = useSelector((store) => store.leave);
+
   return (
-    <div class="table-responsive">
-      <table class="table table-hover">
+    <div className="table-responsive">
+      <table className="table table-hover">
         <thead>
           <tr>
             <th scope="col">DATE</th>
@@ -13,14 +17,40 @@ const LeaveEmployeeTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td data-label="Date">12 Aug 2026</td>
-            <td data-label="Leave Date">Some Important work</td>
-            <td data-label="Reason">Sick Leave</td>
-            <td data-label="Status" className="text-center">
-              <span className="status-badge status-approved">Approved</span>
-            </td>
-          </tr>
+          {leave.length === 0 ? (
+            <tr>
+              <td colSpan="4" className="text-center">
+                No leave apply this time
+              </td>
+            </tr>
+          ) : (
+            leave.map((item) => {
+              return (
+                <tr key={item._id}>
+                  <td data-label="Date">
+                    {new Date(item.startDate).toLocaleDateString("en-NP")}
+                  </td>
+                  <td data-label="Leave Date">{item.leaveType}</td>
+                  <td data-label="Reason">{item.reason}</td>
+                  <td data-label="Status" className="text-center">
+                    {item.status === "approved" ? (
+                      <span className="status-badge status-approved">
+                        Approved
+                      </span>
+                    ) : item.status === "rejected" ? (
+                      <span className="status-badge status-rejected">
+                        Approved
+                      </span>
+                    ) : (
+                      <span className="status-badge status-pending">
+                        Pending
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
     </div>

@@ -3,12 +3,23 @@ import { FaThermometerHalf, FaUmbrellaBeach, FaHome } from "react-icons/fa";
 import { GiPalmTree } from "react-icons/gi";
 import LeaveEmployeeModal from "./LeaveEmployeeModal";
 import LeaveEmployeeTable from "./LeaveEmployeeTable";
+import useGetEmployeeLeave from "../../../../hooks/useGetEmployeeLeave";
+import { useSelector } from "react-redux";
+
 const LeaveEmployeeDetails = () => {
+  useGetEmployeeLeave();
+  const { leave } = useSelector((store) => store.leave);
+  const sickLeave = leave.filter((l) => l.leaveType === "sick").length;
+  const casualLeave = leave.filter((l) => l.leaveType === "casual").length;
+  const annualLeave = leave.filter((l) => l.leaveType === "annual").length;
+
+  const workhomeLeave = leave.filter((l) => l.leaveType === "workhome").length;
+
   const leaveEmployeeCard = [
-    { icon: <FaThermometerHalf />, title: "Sick Leave", count: "0" },
-    { icon: <FaUmbrellaBeach />, title: "Casual Leave", count: "0" },
-    { icon: <GiPalmTree />, title: "Annual Leave", count: "0" },
-    { icon: <FaHome />, title: "Work From Home", count: "0" },
+    { icon: <FaThermometerHalf />, title: "Sick Leave", count: sickLeave },
+    { icon: <FaUmbrellaBeach />, title: "Casual Leave", count: casualLeave },
+    { icon: <GiPalmTree />, title: "Annual Leave", count: annualLeave },
+    { icon: <FaHome />, title: "Work From Home", count: workhomeLeave },
   ];
   return (
     <>

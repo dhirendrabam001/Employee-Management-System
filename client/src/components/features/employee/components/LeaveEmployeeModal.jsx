@@ -42,6 +42,8 @@ const LeaveEmployeeModal = () => {
       });
 
       const res = await promise;
+      console.log("res", res.data);
+
       if (res.data.success) {
         dispatch(setLeave(res.data.leave));
 
