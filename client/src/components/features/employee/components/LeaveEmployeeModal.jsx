@@ -1,8 +1,77 @@
+import axios from "axios";
 import { useState } from "react";
 import Select from "react-select";
+import { LEAVE_API_END_POINT } from "../../../../utils/constantUrl";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { setLeave } from "../../../../redux/leaveSlice";
 
 const LeaveEmployeeModal = () => {
-  const [leaveData, setLeaveData] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [input, setInput] = useState({
+    leaveType: "",
+    startDate: "",
+    endDate: "",
+    reason: "",
+  });
+
+  const changeHandler = async (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const promise = axios.post(`${LEAVE_API_END_POINT}/applyLeave`, input, {
+        withCredentials: true,
+      });
+      toast.promise(promise, {
+        pending: "Submit leave request...",
+        success: "Leave applied successfully",
+        error: {
+          render({ data }) {
+            return (
+              data?.response?.data?.message || "Something wrong leave applied"
+            );
+          },
+        },
+      });
+
+      const res = await promise;
+      if (res.data.success) {
+        dispatch(setLeave(res.data.leave));
+
+        // Close bootstrap modal if present
+        const modalEl = document.getElementById("leaveEmployeeModal");
+        try {
+          const bs = window.bootstrap;
+          if (bs && modalEl) {
+            const instance =
+              bs.Modal.getInstance(modalEl) || new bs.Modal(modalEl);
+            instance.hide();
+          }
+        } catch (err) {
+          // ignore if bootstrap not available
+        }
+
+        // After a short delay navigate to /employee/leave (or reload if already there)
+        setTimeout(() => {
+          if (location?.pathname === "/employee/leave") {
+            window.location.reload();
+          } else {
+            navigate("/employee/leave");
+          }
+        }, 300);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const LeaveReason = [
     { value: "sick", label: "Sick Leave" },
     { value: "casual", label: "Casual Leave" },
@@ -28,25 +97,25 @@ const LeaveEmployeeModal = () => {
               ></button>
             </div>
             <div className="modal-body">
-              <form action="">
+              <form onSubmit={submitHandler}>
                 <div className="row">
                   <div className="mb-3">
                     <label htmlFor="workLocation" className="form-label">
                       Leave Type
                     </label>
                     <Select
-                      inputId="workLocation"
+                      name="leaveType"
+                      value={LeaveReason.find(
+                        (option) => option.value == input.leaveType,
+                      )}
+                      onChange={(selectedLeave) =>
+                        setInput({
+                          ...input,
+                          leaveType: selectedLeave.value,
+                        })
+                      }
                       options={LeaveReason}
                       classNamePrefix="react-select"
-                      //   value={locationOptions.find(
-                      //     (option) => option.value === input.workLocation,
-                      //   )}
-                      //   onChange={(selectedOption) =>
-                      //     setInput({
-                      //       ...input,
-                      //       workLocation: selectedOption?.value || "",
-                      //     })
-                      //   }
                       placeholder="Select location"
                     />
                   </div>
@@ -58,7 +127,13 @@ const LeaveEmployeeModal = () => {
                       >
                         From
                       </label>
-                      <input type="date" className="form-control" />
+                      <input
+                        type="date"
+                        name="startDate"
+                        value={input.startDate}
+                        onChange={changeHandler}
+                        className="form-control"
+                      />
                     </div>
                   </div>
                   <div className="col-12 col-md-6 col-lg-6">
@@ -69,7 +144,13 @@ const LeaveEmployeeModal = () => {
                       >
                         To
                       </label>
-                      <input type="date" className="form-control" />
+                      <input
+                        type="date"
+                        name="endDate"
+                        value={input.endDate}
+                        onChange={changeHandler}
+                        className="form-control"
+                      />
                     </div>
                   </div>
                   <div className="col-12">
@@ -81,6 +162,9 @@ const LeaveEmployeeModal = () => {
                         Reason
                       </label>
                       <textarea
+                        name="reason"
+                        value={input.reason}
+                        onChange={changeHandler}
                         className="form-control"
                         id="exampleFormControlTextarea1"
                         rows="3"
@@ -90,7 +174,7 @@ const LeaveEmployeeModal = () => {
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-primary w-100">
+                  <button type="submit" className="btn btn-primary w-100">
                     Save changes
                   </button>
                 </div>

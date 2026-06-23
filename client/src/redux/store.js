@@ -4,6 +4,7 @@ import employeeSlice from "./employeeSlice";
 import payslipSlice from "./payslipSlice";
 import loaderSlice from "./loaderSlice";
 import attendanceSlice from "./attendanceSlice";
+import leaveSLice from "./leaveSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     payslip: payslipSlice,
     loader: loaderSlice,
     attendance: attendanceSlice,
+    leave: leaveSLice,
   },
 });
 

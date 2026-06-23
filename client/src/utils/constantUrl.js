@@ -5,3 +5,4 @@ export const USER_API_END_POINT = `${BASE_URL}/api/user`;
 export const EMPLOYEE_API_END_POINT = `${BASE_URL}/api/employee`;
 export const PAYSLIPS_API_END_POINT = `${BASE_URL}/api/payslips`;
 export const ATTENDANCE_API_END_POINT = `${BASE_URL}/api/attendance`;
+export const LEAVE_API_END_POINT = `${BASE_URL}/api/leave`;

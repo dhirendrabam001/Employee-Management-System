@@ -1,6 +1,6 @@
 import { setPageLoading } from "../redux/loaderSlice";
 
-export const MIN_PAGE_LOADER_MS = 500;
+export const MIN_PAGE_LOADER_MS = 2000;
 
 export const startPageLoad = (dispatch) => {
   dispatch(setPageLoading(true));

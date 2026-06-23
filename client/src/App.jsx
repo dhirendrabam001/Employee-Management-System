@@ -16,7 +16,7 @@ import EmployeeLoginSection from "./components/auth/pages/EmployeeLoginSection";
 import EmployeePasswordSection from "./components/auth/pages/EmployeePasswordSection";
 import EmployeeSignUpSection from "./components/auth/pages/EmployeeSignUpSection";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "./utils/constantUrl";
 import { setAuthChecking, setUser } from "./redux/authSlice";
@@ -45,11 +45,20 @@ function App() {
   const showLoader =
     pageLoading || (authChecking && shouldShowRouteLoader(location.pathname));
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (shouldShowRouteLoader(location.pathname)) {
       dispatch(setPageLoading(true));
     }
   }, [dispatch, location.pathname]);
+
+  // If the current route is a skip-route (auth/home pages), hide the loader immediately
+  useEffect(() => {
+    if (!shouldShowRouteLoader(location.pathname)) {
+      dispatch(setPageLoading(false));
+    }
+    // keep intentional empty dependency; reactively handle pathname above
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {

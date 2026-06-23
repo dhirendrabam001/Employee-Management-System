@@ -7,11 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { refreshAttendanceList } from "../../../../utils/attendanceHelpers";
 
 const locationOptions = [
+
+
   { value: "office", label: "Office" },
   { value: "remote", label: "Remote" },
   { value: "hybrid", label: "Hybrid" },
   { value: "client-site", label: "Client Site" },
 ];
+
 
 const shiftOptions = [
   { value: "9:00 AM - 6:00 PM", label: "9:00 AM - 6:00 PM" },
