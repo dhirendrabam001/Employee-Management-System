@@ -12,7 +12,6 @@ const LeaveEmployeeDetails = () => {
   const sickLeave = leave.filter((l) => l.leaveType === "sick").length;
   const casualLeave = leave.filter((l) => l.leaveType === "casual").length;
   const annualLeave = leave.filter((l) => l.leaveType === "annual").length;
-
   const workhomeLeave = leave.filter((l) => l.leaveType === "workhome").length;
 
   const leaveEmployeeCard = [

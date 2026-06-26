@@ -19,9 +19,11 @@ const applyLeave = async (req, res) => {
       });
     }
 
+    const employeeId = req.user.id;
+
     // duplicate leave
     const existingLeave = await Leave.findOne({
-      user: req.user._id,
+      employee: employeeId,
       startDate,
       endDate,
     });
@@ -34,13 +36,15 @@ const applyLeave = async (req, res) => {
     }
 
     // create leave
-    const leave = await Leave.create({
-      user: req.user.id,
+    let leave = await Leave.create({
+      employee: employeeId,
       leaveType,
       startDate,
       endDate,
       reason,
     });
+
+    leave = await leave.populate("employee");
 
     return res.status(201).json({
       success: true,
@@ -58,16 +62,15 @@ const applyLeave = async (req, res) => {
 // getmyleave
 const getMyLeave = async (req, res) => {
   try {
-    const leave = await Leave.find({ user: req.user.id }).sort({
-      createdAt: -1,
-    });
-    console.log(leave);
+    const employeeId = req.user.id;
 
-    if (!leave) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Employee leave is not found" });
-    }
+    const leave = await Leave.find({ employee: employeeId })
+      .populate("employee")
+      .sort({
+        createdAt: -1,
+      });
+
+    console.log(leave);
 
     return res.status(200).json({ success: true, leave });
   } catch (error) {

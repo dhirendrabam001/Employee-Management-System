@@ -13,6 +13,8 @@ const EmployeesCard = () => {
     (store) => store.employee,
   );
 
+  console.log("employee", employee);
+
   const filterEmployee = employee.filter((emp) => {
     const matchSearch =
       emp?.firstName?.toUpperCase().includes(searchText.toUpperCase()) ||

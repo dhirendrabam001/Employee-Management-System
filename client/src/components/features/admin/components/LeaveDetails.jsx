@@ -2,8 +2,19 @@ import { useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Select from "react-select";
 import { CiSearch } from "react-icons/ci";
+import { useSelector } from "react-redux";
+import useGetEmployee from "../../../../hooks/useGetEmployee";
+import useGetAllEmployeeLeave from "../../../../hooks/useGetAllEmployeeLeave";
 
 const LeaveDetails = () => {
+  useGetAllEmployeeLeave();
+  const { leave } = useSelector((store) => store.leave);
+  leave.map((item) => {
+    const firstName = item.user?.firstName;
+    const lastName = item.user?.lastName;
+
+    console.log(firstName); // ✅ Dhirendra
+  });
   const statusOptions = [
     { value: "1", label: "All Status" },
     { value: "2", label: "Pending" },
@@ -121,19 +132,19 @@ const LeaveDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {leaveData.length === 0 ? (
+              {leave.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="leave-content py-4 text-center">
                     No leave requests found.
                   </td>
                 </tr>
               ) : (
-                leaveData.map((item) => (
+                leave.map((item) => (
                   <tr key={item.id}>
                     <td>
                       <div className="emp">
                         <div className={`avatar avatar-${item.leaveBadge}`}>
-                          {item.avatar}
+                          {item.user?.firstName?.charAt(0)}
                         </div>
                         <div>
                           <h4>{item.name}</h4>
