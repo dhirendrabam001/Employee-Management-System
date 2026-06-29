@@ -4,17 +4,14 @@ import Select from "react-select";
 import { CiSearch } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import useGetEmployee from "../../../../hooks/useGetEmployee";
-import useGetAllEmployeeLeave from "../../../../hooks/useGetAllEmployeeLeave";
+import useGetEmployeeLeave from "../../../../hooks/useGetEmployeeLeave";
 
 const LeaveDetails = () => {
-  useGetAllEmployeeLeave();
-  const { leave } = useSelector((store) => store.leave);
-  leave.map((item) => {
-    const firstName = item.user?.firstName;
-    const lastName = item.user?.lastName;
+  useGetEmployeeLeave();
+  const { leaveAllEmployee } = useSelector((store) => store.leave);
+  const firstName = leaveAllEmployee?.employee?.firstName;
+  console.log(firstName);
 
-    console.log(firstName); // ✅ Dhirendra
-  });
   const statusOptions = [
     { value: "1", label: "All Status" },
     { value: "2", label: "Pending" },
@@ -132,33 +129,31 @@ const LeaveDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {leave.length === 0 ? (
+              {leaveAllEmployee.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="leave-content py-4 text-center">
                     No leave requests found.
                   </td>
                 </tr>
               ) : (
-                leave.map((item) => (
+                leaveAllEmployee.map((item) => (
                   <tr key={item.id}>
                     <td>
                       <div className="emp">
-                        <div className={`avatar avatar-${item.leaveBadge}`}>
-                          {item.user?.firstName?.charAt(0)}
+                        <div className="avtar-info">
+                          {item.employee?.fullName?.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <h4>{item.name}</h4>
-                          <span>{item.role}</span>
+                          <h4>{item.employee.fullName}</h4>
+                          <span>{item.employee.role}</span>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <span className={`badge badge-${item.leaveBadge}`}>
-                        {item.leaveType}
-                      </span>
+                      <span>{item.leaveType}</span>
                     </td>
                     <td>
-                      <p>{item.dates}</p>
+                      <p>{new Date(item.createdAt).toLocaleDateString()}</p>
                     </td>
                     <td>{item.reason}</td>
                     <td>

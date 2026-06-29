@@ -3,11 +3,11 @@ import { FaThermometerHalf, FaUmbrellaBeach, FaHome } from "react-icons/fa";
 import { GiPalmTree } from "react-icons/gi";
 import LeaveEmployeeModal from "./LeaveEmployeeModal";
 import LeaveEmployeeTable from "./LeaveEmployeeTable";
-import useGetEmployeeLeave from "../../../../hooks/useGetEmployeeLeave";
 import { useSelector } from "react-redux";
+import useGetSingleEmployeLeave from "../../../../hooks/useGetSingleEmployeLeave";
 
 const LeaveEmployeeDetails = () => {
-  useGetEmployeeLeave();
+  useGetSingleEmployeLeave();
   const { leave } = useSelector((store) => store.leave);
   const sickLeave = leave.filter((l) => l.leaveType === "sick").length;
   const casualLeave = leave.filter((l) => l.leaveType === "casual").length;
