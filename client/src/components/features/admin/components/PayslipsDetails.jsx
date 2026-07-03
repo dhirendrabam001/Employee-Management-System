@@ -30,8 +30,9 @@ const PayslipsDetails = () => {
   const dispatch = useDispatch();
 
   const filterPayslip = payslip.filter((item) => {
-    const fullName =
-      `${item?.employee?.firstName} ${item?.employee?.lastName}`.toLowerCase();
+    const fullName = item.employee
+      ? `${item.employee.firstName} ${item.employee.lastName}`.toLowerCase()
+      : "";
 
     return fullName.includes(searchName.toLowerCase());
   });
@@ -63,7 +64,7 @@ const PayslipsDetails = () => {
         const updateList = payslip.map((item) =>
           item._id === id ? res.data.payslip : item,
         );
-        dispatch(setPayslip(res.data.payslip));
+        dispatch(setPayslip(updateList));
         showSuccess("Status Updated");
       }
     } catch (error) {
@@ -147,7 +148,11 @@ const PayslipsDetails = () => {
                   ) : (
                     filterPayslip.map((item) => (
                       <tr key={item._id}>
-                        <td>{`${item.employee.firstName} ${item.employee.lastName}`}</td>
+                        <td>
+                          {item.employee
+                            ? `${item.employee.firstName} ${item.employee.lastName}`
+                            : "Unknown Employee"}
+                        </td>
                         <td>{`${item.month} ${item.year}`}</td>
 
                         <td>{item.basicSalary}</td>
@@ -169,6 +174,7 @@ const PayslipsDetails = () => {
                             <button
                               className="btn btn-sm download-btn d-flex align-items-center gap-2"
                               onClick={() => {
+                                if (!item.employee) return;
                                 dispatch(setSelectedPayslipId(item._id));
                                 navigate(`/admin/payslip/print/${item._id}`);
                               }}

@@ -1,66 +1,97 @@
-import { useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Select from "react-select";
 import { CiSearch } from "react-icons/ci";
-import { useSelector } from "react-redux";
-import useGetEmployee from "../../../../hooks/useGetEmployee";
+import { useDispatch, useSelector } from "react-redux";
 import useGetEmployeeLeave from "../../../../hooks/useGetEmployeeLeave";
+import axios from "axios";
+import { LEAVE_API_END_POINT } from "../../../../utils/constantUrl";
+import {
+  setLeaveAllEmployee,
+  setSearchLeaveText,
+  setStatusFilter,
+} from "../../../../redux/leaveSlice";
+import { toast } from "react-toastify";
 
 const LeaveDetails = () => {
   useGetEmployeeLeave();
-  const { leaveAllEmployee } = useSelector((store) => store.leave);
-  const firstName = leaveAllEmployee?.employee?.firstName;
-  console.log(firstName);
+  const { leaveAllEmployee, searchLeaveText, statusFilter } = useSelector(
+    (store) => store.leave,
+  );
+  const dispatch = useDispatch();
+
+  const updateStatusHandler = async (leaveId, status) => {
+    try {
+      const promise = axios.patch(
+        `${LEAVE_API_END_POINT}/updateStatus/${leaveId}/status`,
+        { status },
+        { withCredentials: true },
+      );
+
+      toast.promise(promise, {
+        pending: `Updating leave status...`,
+        success: `Leave ${status} successfully`,
+        error: {
+          render({ data }) {
+            return (
+              data?.response?.data?.message || "Failed to update leave status"
+            );
+          },
+        },
+      });
+
+      const res = await promise;
+
+      if (res.data.success) {
+        const updatedLeaves = leaveAllEmployee.map((item) =>
+          item._id === leaveId ? { ...item, status } : item,
+        );
+
+        dispatch(setLeaveAllEmployee(updatedLeaves));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const statusOptions = [
-    { value: "1", label: "All Status" },
-    { value: "2", label: "Pending" },
-    { value: "3", label: "Approved" },
-    { value: "4", label: "Rejected" },
-  ];
-
-  const leaveData = [
-    {
-      id: 1,
-      name: "Mark",
-      role: "UI Designer",
-      avatar: "M",
-      leaveType: "Casual Leave",
-      leaveBadge: "blue",
-      dates: "12 Apr - 14 Apr 2025",
-      reason: "Personal",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      name: "Sophia",
-      role: "Marketing Manager",
-      avatar: "S",
-      leaveType: "Sick Leave",
-      leaveBadge: "green",
-      dates: "18 Apr - 19 Apr 2025",
-      reason: "Fever and rest",
-      status: "Approved",
-    },
-    {
-      id: 3,
-      name: "James",
-      role: "Developer",
-      avatar: "J",
-      leaveType: "Annual Leave",
-      leaveBadge: "purple",
-      dates: "25 Apr - 30 Apr 2025",
-      reason: "Vacation",
-      status: "Pending",
-    },
+    { value: "all", label: "All Status" },
+    { value: "pending", label: "Pending" },
+    { value: "approved", label: "Approved" },
+    { value: "rejected", label: "Rejected" },
   ];
 
   const statusBadge = (status) => {
-    if (status === "Approved") return "approved";
-    if (status === "Rejected") return "rejected";
+    if (status === "approved") return "approved";
+    if (status === "rejected") return "rejected";
     return "pending";
   };
 
+  const filterLeaves = leaveAllEmployee.filter((item) => {
+    if (statusFilter !== "all" && item.status !== statusFilter) {
+      return false;
+    }
+
+    if (
+      !item.employee?.fullName
+        ?.toLowerCase()
+        .includes(searchLeaveText.toLowerCase())
+    ) {
+      return false;
+    }
+    return true;
+  });
+
+  const pendingCount = leaveAllEmployee.filter(
+    (item) => item.status === "pending",
+  ).length;
+
+  const approvedCount = leaveAllEmployee.filter(
+    (item) => item.status === "approved",
+  ).length;
+
+  const rejectedCount = leaveAllEmployee.filter(
+    (item) => item.status === "rejected",
+  ).length;
   return (
     <section className="leave-panel">
       <div className="container">
@@ -72,25 +103,19 @@ const LeaveDetails = () => {
               <p>Review and manage employee leave requests</p>
             </div>
           </div>
-
-          <div className="leave-top-actions">
-            <button type="button" className="leave-action-btn">
-              <FaPlus /> New Request
-            </button>
-          </div>
         </div>
 
         <div className="leave-stats">
           <div className="stat pending">
-            <span>12</span>
+            <span>{pendingCount}</span>
             <p>Pending</p>
           </div>
           <div className="stat approved">
-            <span>24</span>
+            <span>{approvedCount}</span>
             <p>Approved</p>
           </div>
           <div className="stat rejected">
-            <span>03</span>
+            <span>{rejectedCount}</span>
             <p>Rejected</p>
           </div>
         </div>
@@ -100,13 +125,19 @@ const LeaveDetails = () => {
             <div className="col-12 col-md-10 col-lg-10">
               <div className="employee-search-input">
                 <CiSearch className="search-icon" />
-                <input type="text" placeholder="Search employees, roles..." />
+                <input
+                  type="text"
+                  value={searchLeaveText}
+                  onChange={(e) => dispatch(setSearchLeaveText(e.target.value))}
+                  placeholder="Search employees, roles..."
+                />
               </div>
             </div>
             <div className="col-12 col-md-2 col-lg-2">
               <div className="select-search">
                 <Select
                   options={statusOptions}
+                  onChange={(option) => dispatch(setStatusFilter(option.value))}
                   classNamePrefix="select-custom"
                   placeholder="All Status"
                   menuPlacement="top"
@@ -129,15 +160,15 @@ const LeaveDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {leaveAllEmployee.length === 0 ? (
+              {filterLeaves.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="leave-content py-4 text-center">
                     No leave requests found.
                   </td>
                 </tr>
               ) : (
-                leaveAllEmployee.map((item) => (
-                  <tr key={item.id}>
+                filterLeaves.map((item) => (
+                  <tr key={item._id}>
                     <td>
                       <div className="emp">
                         <div className="avtar-info">
@@ -162,8 +193,24 @@ const LeaveDetails = () => {
                       </span>
                     </td>
                     <td className="actions">
-                      <button className="approve">Approve</button>
-                      <button className="reject">Reject</button>
+                      <button
+                        className="approve"
+                        disabled={item.status === "approved"}
+                        onClick={() =>
+                          updateStatusHandler(item._id, "approved")
+                        }
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="reject"
+                        disabled={item.status === "rejected"}
+                        onClick={() =>
+                          updateStatusHandler(item._id, "rejected")
+                        }
+                      >
+                        Reject
+                      </button>
                     </td>
                   </tr>
                 ))

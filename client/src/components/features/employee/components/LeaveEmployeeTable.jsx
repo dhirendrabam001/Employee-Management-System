@@ -2,7 +2,9 @@ import { useSelector } from "react-redux";
 
 const LeaveEmployeeTable = () => {
   const { leave } = useSelector((store) => store.leave);
-
+  console.log("leave", leave);
+  const formatStatus = (status) =>
+    status.charAt(0).toUpperCase() + status.slice(1);
   return (
     <div className="table-responsive">
       <table className="table table-hover">
@@ -33,19 +35,9 @@ const LeaveEmployeeTable = () => {
                   <td data-label="Leave Date">{item.leaveType}</td>
                   <td data-label="Reason">{item.reason}</td>
                   <td data-label="Status" className="text-center">
-                    {item.status === "approved" ? (
-                      <span className="status-badge status-approved">
-                        Approved
-                      </span>
-                    ) : item.status === "rejected" ? (
-                      <span className="status-badge status-rejected">
-                        Approved
-                      </span>
-                    ) : (
-                      <span className="status-badge status-pending">
-                        Pending
-                      </span>
-                    )}
+                    <span className={`status-badge status-${item.status}`}>
+                      {formatStatus(item.status)}
+                    </span>
                   </td>
                 </tr>
               );

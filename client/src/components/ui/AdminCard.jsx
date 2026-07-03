@@ -2,9 +2,34 @@ import { useSelector } from "react-redux";
 import { FiUsers } from "react-icons/fi";
 import { FaBuildingUser, FaCalendarCheck } from "react-icons/fa6";
 import { FaFileAlt } from "react-icons/fa";
+import useGetAllAttendance from "../../hooks/useGetAllAttendance";
+import useGetEmployeeLeave from "../../hooks/useGetEmployeeLeave";
 
 const AdminCard = () => {
   const { user } = useSelector((store) => store.auth);
+  const { employee } = useSelector((store) => store.employee);
+  const { attendance } = useSelector((store) => store.attendance);
+  const { leaveAllEmployee } = useSelector((store) => store.leave);
+
+  useGetAllAttendance();
+  useGetEmployeeLeave();
+
+  const totalEmployee = employee?.length || 0;
+  const departmentsCount = new Set(
+    employee?.map((item) => item.department?.trim()).filter(Boolean),
+  ).size;
+  const todayString = new Date().toLocaleDateString();
+  const todayAttendance = attendance?.filter((item) => {
+    const attendanceDate = item.attendanceDate || item.createdAt || item.date;
+    return (
+      attendanceDate &&
+      new Date(attendanceDate).toLocaleDateString() === todayString &&
+      item.status?.toLowerCase() === "present"
+    );
+  }).length;
+  const pendingLeaves = leaveAllEmployee?.filter(
+    (item) => item.status?.toLowerCase() === "pending",
+  ).length;
 
   return (
     <div className="admin-card">
@@ -18,7 +43,7 @@ const AdminCard = () => {
             <div className="card-info d-flex align-items-center justify-content-between">
               <div className="card-heading">
                 <h6 className="text-muted">Total Employees</h6>
-                <h2 className="fw-bold">10</h2>
+                <h2 className="fw-bold">{totalEmployee}</h2>
               </div>
               <div className="card-icon">
                 <FiUsers className="icon-user" />
@@ -29,7 +54,7 @@ const AdminCard = () => {
             <div className="card-info d-flex align-items-center justify-content-between">
               <div className="card-heading">
                 <h6 className="text-muted">Departments</h6>
-                <h2 className="fw-bold">15</h2>
+                <h2 className="fw-bold">{departmentsCount}</h2>
               </div>
               <div className="card-icon">
                 <FaBuildingUser className="icon-user" />
@@ -40,7 +65,7 @@ const AdminCard = () => {
             <div className="card-info d-flex align-items-center justify-content-between">
               <div className="card-heading">
                 <h6 className="text-muted">Today's Attendance</h6>
-                <h2 className="fw-bold">10</h2>
+                <h2 className="fw-bold">{todayAttendance}</h2>
               </div>
               <div className="card-icon">
                 <FaCalendarCheck className="icon-user" />
@@ -51,7 +76,7 @@ const AdminCard = () => {
             <div className="card-info d-flex align-items-center justify-content-between">
               <div className="card-heading">
                 <h6 className="text-muted">Pending Leaves</h6>
-                <h2 className="fw-bold">10</h2>
+                <h2 className="fw-bold">{pendingLeaves}</h2>
               </div>
               <div className="card-icon">
                 <FaFileAlt className="icon-user" />

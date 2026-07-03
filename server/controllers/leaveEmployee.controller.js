@@ -70,8 +70,6 @@ const getMyLeave = async (req, res) => {
         createdAt: -1,
       });
 
-    console.log(leave);
-
     return res.status(200).json({ success: true, leave });
   } catch (error) {
     console.error(error);
@@ -93,15 +91,12 @@ const getAllEmployeeLeaves = async (req, res) => {
     const leaves = await Leave.find()
       .populate("employee")
       .sort({ createdAt: -1 });
-    console.log("leave", leaves);
 
     return res.status(200).json({
       success: true,
       leaves,
       message: "All employee leave data fetched",
     });
-
-    console.log("leave", leave);
   } catch (error) {
     console.error(error);
   }
@@ -110,7 +105,6 @@ const getAllEmployeeLeaves = async (req, res) => {
 const getSingleEmployeeLeave = async (req, res) => {
   try {
     const employeeSingleId = req.params.id;
-    console.log(employeeSingleId);
   } catch (error) {
     console.error(error);
     return res
@@ -122,31 +116,39 @@ const getSingleEmployeeLeave = async (req, res) => {
 // check status
 const updateLeaveStatus = async (req, res) => {
   try {
-    // check role admin or not
-    if (req.user.role !== "admin") {
-      return res
-        .status(403)
-        .json({ success: false, message: "Only admin can accessed" });
+    // ✅ SAFE CHECK (VERY IMPORTANT)
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Only admin can access",
+      });
     }
     const leaveId = req.params.id;
-    console.log("leave", leaveId);
 
     const { status } = req.body;
 
     // validate status
     const allowedStatus = ["approved", "pending", "rejected"];
-    if (allowedStatus.includes(status)) {
+    if (!allowedStatus.includes(status)) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid status value" });
     }
     // find leave
     const leave = await Leave.findById(leaveId);
+
     if (!leave) {
       return res.status(404).json({
         success: false,
         message: "Leave not found",
       });
+    }
+
+    // check admin approved or not
+    if (leave.status !== "pending") {
+      return res
+        .status(400)
+        .json({ success: false, message: `Leave already ${leave.status}` });
     }
 
     // update

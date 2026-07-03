@@ -27,7 +27,7 @@ const leaveEmployeeSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "success", "rejected"],
+      enum: ["approved", "pending", "rejected"],
       default: "pending",
     },
   },
