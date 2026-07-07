@@ -82,7 +82,7 @@ const getMyLeave = async (req, res) => {
 // get all employee leave[admin]
 const getAllEmployeeLeaves = async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
+    if (!req.user || req.user.role !== "admin") {
       return res
         .status(403)
         .json({ success: false, message: "Only admin can access" });

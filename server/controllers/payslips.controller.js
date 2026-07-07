@@ -132,6 +132,29 @@ const getPayslipById = async (req, res) => {
   }
 };
 
+// getmy payslips
+const getMyPayslips = async (req, res) => {
+  try {
+    const user = await User.findById(req.id);
+
+    const payslips = await Payslips.find()
+      .populate("employee")
+      .then((data) =>
+        data.filter((item) => item.employee.email === user.email),
+      );
+
+    return res.status(200).json({
+      success: true,
+      payslip,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // update status controller
 const updateStatus = async (req, res) => {
   try {
@@ -163,4 +186,10 @@ const updateStatus = async (req, res) => {
   }
 };
 
-module.exports = { payslips, getAllPayslips, getPayslipById, updateStatus };
+module.exports = {
+  payslips,
+  getAllPayslips,
+  getPayslipById,
+  getMyPayslip,
+  updateStatus,
+};

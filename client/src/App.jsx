@@ -36,6 +36,7 @@ import CubeLoader from "./components/common/Loader/CubeLoader";
 // employee pages
 import Attendance from "./components/features/employee/pages/Attendance";
 import LeaveEmployee from "./components/features/employee/pages/LeaveEmployee";
+import EmployeePayslip from "./components/features/employee/pages/employeePayslip";
 
 function App() {
   const dispatch = useDispatch();
@@ -198,6 +199,14 @@ function App() {
             element={
               <ProtectedRoutes role="employee">
                 <Attendance />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/employee/payslips"
+            element={
+              <ProtectedRoutes role="employee">
+                <EmployeePayslip />
               </ProtectedRoutes>
             }
           />

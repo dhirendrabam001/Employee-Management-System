@@ -4064,3 +4064,49 @@ body {
 }
 
 /* employee leave css end */
+
+/* employee payslips css start */
+.employee-payslip h2 {
+  font-size: var(--h2-size);
+  color: var(--h2-color);
+  font-weight: 700;
+}
+.employee-payslip p {
+  color: var(--p-color);
+  font-size: var(--p-size);
+}
+.employee-payslip .table thead {
+  background: #f8f9fa;
+}
+
+.employee-payslip .table tbody tr:hover {
+  background-color: #f1f5f9;
+  transition: 0.3s;
+}
+
+.download-btn {
+  background: #f1f5ff;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.download-btn:hover {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  transform: translateY(-1px);
+}
+
+.download-btn svg {
+  transition: transform 0.25s ease;
+}
+
+.download-btn:hover svg {
+  transform: translateY(2px);
+}
+/* employee payslips css end */
