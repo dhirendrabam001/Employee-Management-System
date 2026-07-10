@@ -88,7 +88,8 @@ const PayslipsDetails = () => {
                   <div>
                     <h2 className="mb-1">Payslips</h2>
                     <p className="mb-0">
-                      View and download your payslip history.
+                      View and download your Professional employee payslip
+                      summary.
                     </p>
                   </div>
                 </div>

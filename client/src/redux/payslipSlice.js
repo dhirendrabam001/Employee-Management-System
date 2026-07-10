@@ -7,6 +7,7 @@ const payslipSlice = createSlice({
     searchName: "",
     selectedPayslipId: null,
     singlePayslipData: null,
+    employeeParticularPayslip: null,
   },
   reducers: {
     setPayslip: (state, action) => {
@@ -21,6 +22,9 @@ const payslipSlice = createSlice({
     setSignlePayslipData: (state, action) => {
       state.singlePayslipData = action.payload;
     },
+    setemployeeParticularPayslip: (state, action) => {
+      state.employeeParticularPayslip = action.payload;
+    },
   },
 });
 export const {
@@ -28,5 +32,6 @@ export const {
   setSearchName,
   setSelectedPayslipId,
   setSignlePayslipData,
+  setemployeeParticularPayslip,
 } = payslipSlice.actions;
 export default payslipSlice.reducer;

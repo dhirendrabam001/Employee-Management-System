@@ -5,7 +5,8 @@ const {
   getAllPayslips,
   getPayslipById,
   updateStatus,
-  getMyPayslip,
+  getMyPayslips,
+  getSinglePayslip,
 } = require("../controllers/payslips.controller");
 
 const router = express.Router();
@@ -13,7 +14,8 @@ const router = express.Router();
 router.post("/payslips", auth, payslips);
 router.get("/getAllPayslipsList", auth, getAllPayslips);
 router.get("/getPayslipById/:id", auth, getPayslipById);
-router.get("/getMyPayslip/:id", auth, getMyPayslip);
+router.get("/getMyPayslip", auth, getMyPayslips);
+router.get("/getSinglePayslipById/:id", auth, getSinglePayslip);
 router.put("/updateStatus/:id/status", updateStatus);
 
 module.exports = router;

@@ -1,30 +1,17 @@
 import { MdOutlineFileDownload } from "react-icons/md";
-import useGetPayslipById from "../../../../hooks/useGetPayslipById";
-import { useSelector } from "react-redux";
-import useGetAllPayslip from "../../../../hooks/useGetAllPayslips";
+import { useDispatch, useSelector } from "react-redux";
+import useGetParticularEmployeePayslip from "../../../../hooks/useGetParticularEmployeePayslip";
+import { setSelectedPayslipId } from "../../../../redux/payslipSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import useGetEmployeeSinglePayslip from "../../../../hooks/useGetEmployeeSinglePayslip";
 const EmployeePayslipDetails = () => {
-  useGetAllPayslip();
-  useGetPayslipById();
-  const { user } = useSelector((store) => store.auth);
-  console.log(user);
-
-  const { payslip } = useSelector((store) => store.payslip);
-  console.log(payslip);
-
-  const employeePayslip = payslip.filter(
-    (item) => item.employee?._id === user?._id,
-  );
-
-  console.log("paylispsid", employeePayslip);
-
-  const payslips = [
-    {
-      id: 1,
-      period: "January 2026",
-      basicSalary: 1000,
-      netSalary: 1000,
-    },
-  ];
+  const { id } = useParams();
+  useGetParticularEmployeePayslip();
+  useGetEmployeeSinglePayslip(id);
+  const { employeeParticularPayslip } = useSelector((store) => store.payslip);
+  const { singlePayslipData } = useSelector((store) => store.payslip);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <div className="employee-payslip py-4">
@@ -52,9 +39,17 @@ const EmployeePayslipDetails = () => {
 
                 {/* Table Body */}
                 <tbody>
-                  {payslips.map((item) => (
+                  {employeeParticularPayslip?.map((item) => (
                     <tr key={item.id} className="border-top">
-                      <td className="px-4 py-3 fw-medium">{item.period}</td>
+                      <td className="px-4 py-3 fw-medium">
+                        {new Date(item.year, item.month - 1).toLocaleString(
+                          "default",
+                          {
+                            month: "long",
+                          },
+                        )}
+                        {item.year}
+                      </td>
                       <td className="px-4 py-3 text-muted">
                         ${item.basicSalary.toLocaleString()}
                       </td>
@@ -62,7 +57,12 @@ const EmployeePayslipDetails = () => {
                         ${item.netSalary.toLocaleString()}
                       </td>
                       <td className="px-4 py-3 text-end">
-                        <button className="btn download-btn d-inline-flex align-items-center gap-2">
+                        <button
+                          onClick={() => {
+                            navigate(`/employee/payslip/${item._id}`);
+                          }}
+                          className="btn download-btn d-inline-flex align-items-center gap-2"
+                        >
                           <MdOutlineFileDownload />
                           Download
                         </button>

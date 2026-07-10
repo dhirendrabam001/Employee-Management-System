@@ -210,6 +210,22 @@ function App() {
               </ProtectedRoutes>
             }
           />
+          <Route
+            path="/employee/payslip/:id"
+            element={
+              <ProtectedRoutes role="employee">
+                <PrintPayslip />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/employee/setting"
+            element={
+              <ProtectedRoutes role="employee">
+                <Settings />
+              </ProtectedRoutes>
+            }
+          />
         </Routes>
       </div>
     </>

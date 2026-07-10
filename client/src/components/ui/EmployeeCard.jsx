@@ -1,9 +1,5 @@
 import { useSelector } from "react-redux";
-import {
- 
-  FaCalendarCheck,
-  FaArrowRightLong,
-} from "react-icons/fa6";
+import { FaCalendarCheck, FaArrowRightLong } from "react-icons/fa6";
 import { FaFileAlt } from "react-icons/fa";
 import { HiCurrencyDollar } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
@@ -59,12 +55,20 @@ const EmployeeCard = () => {
 
         <div className="employee-btn d-flex align-items-center gap-3">
           <div className="mark-btn">
-            <button type="submit" onClick={() => navigate("/employee/attendance")} className="d-flex align-items-center gap-3">
+            <button
+              type="submit"
+              onClick={() => navigate("/employee/attendance")}
+              className="d-flex align-items-center gap-3"
+            >
               Mark Attendance <FaArrowRightLong className="mt-1" />
             </button>
           </div>
           <div className="leave-btn">
-            <button type="submit" className="d-flex align-items-center gap-3">
+            <button
+              onClick={() => navigate("/employee/leave")}
+              type="submit"
+              className="d-flex align-items-center gap-3"
+            >
               Apply Leave <FaArrowRightLong className="mt-1" />
             </button>
           </div>

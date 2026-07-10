@@ -25,6 +25,8 @@ const useGetPayslipById = (selectedPayslipId) => {
         );
 
         if (!cancelled && res.data.success) {
+          console.log("particular payslips", res.data);
+
           dispatch(setSignlePayslipData(res.data.payslip));
         }
       } catch (error) {

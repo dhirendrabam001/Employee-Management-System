@@ -135,23 +135,68 @@ const getPayslipById = async (req, res) => {
 // getmy payslips
 const getMyPayslips = async (req, res) => {
   try {
-    const user = await User.findById(req.id);
+    //  logged-in user id (from auth middleware)
+    const userId = req.user.id;
 
-    const payslips = await Payslips.find()
-      .populate("employee")
-      .then((data) =>
-        data.filter((item) => item.employee.email === user.email),
-      );
+    //  find employee linked to this user
+    const employee = await Employee.findOne({ user: userId });
+
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+
+    //  get only this employee's payslips
+    const payslip = await Payslips.find({
+      employee: employee._id,
+    }).sort({ createdAt: -1 });
+
+    if (payslip.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No payslips found",
+      });
+    }
 
     return res.status(200).json({
       success: true,
       payslip,
+      message: "Your payslips fetched successfully",
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal server error",
     });
+  }
+};
+
+// get single payslips data
+const getSinglePayslip = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const payslip = await Payslips.findById(id).populate("employee");
+
+    // check payslip found or not
+    if (!payslip) {
+      return res.status(404).json({
+        success: false,
+        message: "Particular payslips data is not found",
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, payslip, message: "Fetched particular payslip" });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -190,6 +235,7 @@ module.exports = {
   payslips,
   getAllPayslips,
   getPayslipById,
-  getMyPayslip,
+  getMyPayslips,
+  getSinglePayslip,
   updateStatus,
 };

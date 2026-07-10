@@ -28,9 +28,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
 
   // Close mobile menu when route changes
-  useEffect(() => {
-    
-  }, [location.pathname]);
+  useEffect(() => {}, [location.pathname]);
 
   // Stop page scroll when mobile menu is open
   useEffect(() => {
@@ -93,7 +91,7 @@ const Sidebar = () => {
       path: "/employee/payslips",
       icon: <HiCurrencyDollar />,
     },
-    { name: "Settings", path: "/employee/settings", icon: <MdSettings /> },
+    { name: "Settings", path: "/employee/setting", icon: <MdSettings /> },
   ];
 
   const menu = user?.role === "admin" ? adminMenu : employeeMenu;

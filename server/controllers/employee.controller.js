@@ -1,5 +1,6 @@
 const { Employee } = require("../models/employees.model");
 const bcrypt = require("bcrypt");
+const { User } = require("../models/user.model");
 
 const employee = async (req, res) => {
   try {
@@ -39,19 +40,28 @@ const employee = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Please all field are required" });
     }
+    // hashPassword
+    let user = await User.findOne({ email });
 
-    // check if user already exits or not
-    const existingEmployee = await Employee.findOne({ email });
-    if (existingEmployee) {
-      return res.status(400).json({
-        success: false,
-        message: "Employees already exists within email!",
+    if (!user) {
+      const hashPassword = await bcrypt.hash(password, 10);
+      user = await User.create({
+        fullName: `${firstName} ${lastName}`,
+        phoneNumber: phone,
+        email,
+        password: hashPassword,
+        role: "employee",
       });
     }
-
-    // hashPassword
-    const hashPassword = await bcrypt.hash(password, 10);
+    const emailExists = await Employee.findOne({ email });
+    if (emailExists) {
+      return res.status(400).json({
+        success: false,
+        message: "Employee already exists with this email",
+      });
+    }
     const employee = await Employee.create({
+      user: user._id, // ✅ THIS LINE IS MOST IMPORTANT
       firstName,
       lastName,
       phone,
@@ -63,7 +73,7 @@ const employee = async (req, res) => {
       allowance,
       deduction,
       email,
-      password: hashPassword,
+
       role,
     });
 

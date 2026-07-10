@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const employeesSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
     phone: { type: String, required: true },
@@ -13,7 +17,7 @@ const employeesSchema = new mongoose.Schema(
     allowance: { type: Number, default: 0 },
     deduction: { type: Number, default: 0 },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String },
     role: {
       type: String,
       enum: ["admin", "employee"],
