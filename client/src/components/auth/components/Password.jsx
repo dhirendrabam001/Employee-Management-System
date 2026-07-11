@@ -51,8 +51,14 @@ const Password = () => {
 
       const res = await promise;
       if (res.data.success) {
-        dispatch(setUser(res.data.user));
-        navigate("/verify");
+        const user = res.data.user;
+        dispatch(setUser(user));
+
+        if (user?.role === "admin") {
+          navigate("/admin/dashboard", { replace: true });
+        } else {
+          navigate("/employee/dashboard", { replace: true });
+        }
       }
     } catch (error) {
       console.error(error);
