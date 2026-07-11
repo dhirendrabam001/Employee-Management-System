@@ -36,7 +36,7 @@ import CubeLoader from "./components/common/Loader/CubeLoader";
 // employee pages
 import Attendance from "./components/features/employee/pages/Attendance";
 import LeaveEmployee from "./components/features/employee/pages/LeaveEmployee";
-import EmployeePayslip from "./components/features/employee/pages/employeePayslip";
+import EmployeePayslip from "./components/features/employee/pages/EmployeePayslip";
 
 function App() {
   const dispatch = useDispatch();
