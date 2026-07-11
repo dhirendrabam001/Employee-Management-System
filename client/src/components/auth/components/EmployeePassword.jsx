@@ -1,7 +1,6 @@
-import { FaArrowRightLong } from "react-icons/fa6";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
-import { data, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -11,6 +10,7 @@ import { setUser } from "../../../redux/authSlice";
 
 const EmployeePassword = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { email } = useSelector((store) => store.auth);
   const [showPassword, setShowPassword] = useState(false);
   const [input, setInput] = useState({
@@ -60,8 +60,6 @@ const EmployeePassword = () => {
       console.error(error);
     }
   };
-
-  const navigate = useNavigate();
   return (
     <div className="d-flex justify-content-center align-items-center password-card">
       <div className="card shadow">
