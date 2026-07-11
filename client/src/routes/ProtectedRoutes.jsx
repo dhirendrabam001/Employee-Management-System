@@ -12,23 +12,22 @@ const getStoredUser = () => {
 const ProtectedRoutes = ({ children, role }) => {
   const { user, authChecking } = useSelector((store) => store.auth);
 
-  // While auth is resolving, check localStorage so we don't flash-redirect to /
-  if (authChecking) {
-    const storedUser = getStoredUser();
-    // If there's a persisted user, render nothing (loader will show) rather
-    // than immediately redirecting to home
-    if (storedUser) return null;
-    // No stored user either — safe to show nothing until check completes
+  // Resolve user from Redux state first, fall back to localStorage.
+  // This covers the gap between component mount and Redux hydration.
+  const resolvedUser = user || getStoredUser();
+
+  // If auth is still being checked AND we have no user anywhere, wait.
+  // Never redirect to / while authChecking — that causes the iPhone flash.
+  if (authChecking && !resolvedUser) {
     return null;
   }
 
-  // Use Redux user; fall back to localStorage in case Redux hasn't hydrated yet
-  const resolvedUser = user || getStoredUser();
-
+  // No user found anywhere — send to home
   if (!resolvedUser) {
     return <Navigate to="/" replace />;
   }
 
+  // User exists but wrong role — redirect to their correct dashboard
   if (resolvedUser.role !== role) {
     if (resolvedUser.role === "admin") {
       return <Navigate to="/admin/dashboard" replace />;

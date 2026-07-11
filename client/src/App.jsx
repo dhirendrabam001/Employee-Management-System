@@ -72,63 +72,70 @@ function App() {
           return null;
         }
       })();
+      const storedToken = window.localStorage.getItem("authToken");
 
-      // Hydrate Redux from localStorage immediately so ProtectedRoutes
-      // never sees a null user while the /me request is in flight
-      if (storedUser && !user) {
+      // If localStorage already has a valid user+token, trust it immediately.
+      // Skip the /me network call — this prevents Render's cold-start (5-15s)
+      // from blocking the dashboard on mobile/iPhone Safari where cookies are
+      // also blocked. The /me call only matters for server-side token expiry
+      // detection, which we handle below only when there is NO local session.
+      if (storedUser && storedToken) {
         dispatch(setUser(storedUser));
+        // Still verify in the background so we can catch genuine expiry,
+        // but do NOT block rendering or change authChecking
+        axios
+          .get(`${USER_API_END_POINT}/me`, {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${storedToken}` },
+            validateStatus: () => true,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              // Refresh with latest server data (name/email may have changed)
+              dispatch(setUser(res.data.user));
+            } else if (res.status === 401) {
+              const msg = res.data?.message || "";
+              if (msg.toLowerCase().includes("expired")) {
+                // Token genuinely expired — log out and notify
+                dispatch(setUser(null));
+                handleSessionExpired(msg);
+              }
+              // Any other 401 (e.g. cookie blocked) — keep local session alive
+            }
+          })
+          .catch(() => {
+            // Network error / Render cold start — keep local session, try again later
+          });
+
+        // Auth is already resolved from localStorage — no need to set authChecking
+        dispatch(setAuthChecking(false));
+        return;
       }
 
+      // No local session — must verify with the server
       try {
-        const token = window.localStorage.getItem("authToken");
-
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
-          // Send token in header too — cross-origin cookies can be blocked
-          // by iOS Safari, Firefox strict mode, etc.
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : {},
           validateStatus: () => true,
         });
 
         if (res.status === 200) {
-          // Server confirmed user — update Redux with fresh data
           dispatch(setUser(res.data.user));
-        } else if (res.status === 401) {
-          const msg = res.data?.message || "";
-          const isExpired = msg.toLowerCase().includes("expired");
-
-          if (isExpired) {
-            // Token truly expired — clear everything and notify
-            dispatch(setUser(null));
-            await handleSessionExpired(msg);
-          } else {
-            // Could be a cookie-blocked request (SameSite / mobile browser).
-            // If we have a localStorage user+token, keep the session alive.
-            if (!storedUser || !token) {
-              dispatch(setUser(null));
-            }
-            // Otherwise: keep the storedUser that was already dispatched above
-          }
         } else {
-          // Any other non-200 status: only clear user if there's nothing in storage
-          if (!storedUser) {
-            dispatch(setUser(null));
+          dispatch(setUser(null));
+          const msg = res.data?.message || "";
+          if (msg.toLowerCase().includes("expired")) {
+            await handleSessionExpired(msg);
           }
         }
       } catch {
-        // Network error (Render cold start, offline, etc.)
-        // Fall back to localStorage — never wipe a user just because the
-        // network request failed
-        if (!storedUser) {
-          dispatch(setUser(null));
-        }
+        dispatch(setUser(null));
       } finally {
         dispatch(setAuthChecking(false));
       }
     };
     fetchUser();
-    // Run once on mount only — user dependency removed to avoid re-running
-    // after dispatch(setUser(...)) above triggers a re-render loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

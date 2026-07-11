@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const getStoredUser = () => {
   if (typeof window === "undefined") return null;
-
   try {
     const storedUser = window.localStorage.getItem("authUser");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -13,7 +12,6 @@ const getStoredUser = () => {
 
 const persistUser = (user) => {
   if (typeof window === "undefined") return;
-
   if (user) {
     window.localStorage.setItem("authUser", JSON.stringify(user));
   } else {
@@ -22,13 +20,18 @@ const persistUser = (user) => {
   }
 };
 
+const storedUser = getStoredUser();
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     loading: false,
-    authChecking: true,
-    user: getStoredUser(),
-    role: getStoredUser()?.role ?? null,
+    // If we already have a user in localStorage, no need to show a
+    // "checking" state — the user is already known. This prevents the
+    // flash-redirect to / on page load / route navigation on mobile.
+    authChecking: !storedUser,
+    user: storedUser,
+    role: storedUser?.role ?? null,
     email: null,
   },
   reducers: {
