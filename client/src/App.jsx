@@ -63,6 +63,15 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async () => {
+      const storedUser =
+        typeof window !== "undefined"
+          ? JSON.parse(window.localStorage.getItem("authUser") || "null")
+          : null;
+
+      if (storedUser && !user) {
+        dispatch(setUser(storedUser));
+      }
+
       try {
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
@@ -72,7 +81,7 @@ function App() {
         if (res.status === 200) {
           dispatch(setUser(res.data.user));
         } else if (res.status === 401) {
-          if (user) {
+          if (user || storedUser) {
             return;
           }
 
@@ -84,10 +93,21 @@ function App() {
             await handleSessionExpired(msg);
           }
         } else {
-          dispatch(setUser(null));
+          if (!user && !storedUser) {
+            dispatch(setUser(null));
+          }
         }
       } catch {
-        dispatch(setUser(null));
+        if (!user) {
+          const persistedUser =
+            typeof window !== "undefined"
+              ? JSON.parse(window.localStorage.getItem("authUser") || "null")
+              : null;
+
+          if (!persistedUser) {
+            dispatch(setUser(null));
+          }
+        }
       } finally {
         dispatch(setAuthChecking(false));
       }

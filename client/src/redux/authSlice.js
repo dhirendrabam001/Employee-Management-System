@@ -1,18 +1,41 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getStoredUser = () => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const storedUser = window.localStorage.getItem("authUser");
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch {
+    return null;
+  }
+};
+
+const persistUser = (user) => {
+  if (typeof window === "undefined") return;
+
+  if (user) {
+    window.localStorage.setItem("authUser", JSON.stringify(user));
+  } else {
+    window.localStorage.removeItem("authUser");
+  }
+};
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     loading: false,
     authChecking: true,
-    user: null,
-    role: null,
+    user: getStoredUser(),
+    role: getStoredUser()?.role ?? null,
     email: null,
   },
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
-      state.role = action.payload?.role;
+      const user = action.payload;
+      state.user = user;
+      state.role = user?.role ?? null;
+      persistUser(user);
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
