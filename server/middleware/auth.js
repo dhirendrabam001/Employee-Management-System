@@ -20,10 +20,11 @@ const auth = async (req, res, next) => {
     // console.log("decoded", decoded);
   } catch (error) {
     console.error(error);
+    const isProduction = process.env.NODE_ENV === "production";
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "Lax",
       path: "/",
     });
     return res

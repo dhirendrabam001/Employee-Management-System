@@ -101,13 +101,13 @@ const login = async (req, res) => {
     { expiresIn: "1h" },
   );
 
-  // console.log(token);
+  const isProduction = process.env.NODE_ENV === "production";
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: false,
-    sameSite: "Lax",
-    path: "/", // VERY IMPORTANT
+    secure: isProduction,
+    sameSite: isProduction ? "None" : "Lax",
+    path: "/",
     maxAge: 60 * 60 * 1000,
   });
 
@@ -239,10 +239,12 @@ const getMe = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "Lax",
       path: "/",
     });
     return res.status(200).json({
