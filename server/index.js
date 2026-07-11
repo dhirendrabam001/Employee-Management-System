@@ -9,11 +9,13 @@ const connectDB = require("./config/connection");
 const app = express();
 
 // cors used
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+
 app.use(
   cors({
-    origin: ["http://localhost:5174"],
+    origin: allowedOrigins,
     credentials: true,
-  }),
+  })
 );
 
 // middleware
