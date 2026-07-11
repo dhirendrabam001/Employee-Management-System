@@ -115,6 +115,7 @@ const login = async (req, res) => {
     success: true,
     user,
     role: user.role,
+    token,
     message: "Login Success",
   });
 };

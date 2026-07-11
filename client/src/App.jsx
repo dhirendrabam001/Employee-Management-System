@@ -73,8 +73,11 @@ function App() {
       }
 
       try {
+        const token = window.localStorage.getItem("authToken");
+
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
           validateStatus: () => true,
         });
 

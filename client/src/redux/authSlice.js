@@ -18,6 +18,7 @@ const persistUser = (user) => {
     window.localStorage.setItem("authUser", JSON.stringify(user));
   } else {
     window.localStorage.removeItem("authUser");
+    window.localStorage.removeItem("authToken");
   }
 };
 
@@ -32,10 +33,16 @@ const authSlice = createSlice({
   },
   reducers: {
     setUser: (state, action) => {
-      const user = action.payload;
+      const user = action.payload?.user ?? action.payload;
       state.user = user;
       state.role = user?.role ?? null;
       persistUser(user);
+
+      if (action.payload?.token) {
+        window.localStorage.setItem("authToken", action.payload.token);
+      } else if (!user) {
+        window.localStorage.removeItem("authToken");
+      }
     },
     setLoading: (state, action) => {
       state.loading = action.payload;

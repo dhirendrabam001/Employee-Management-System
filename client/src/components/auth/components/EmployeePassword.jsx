@@ -48,7 +48,7 @@ const EmployeePassword = () => {
       const res = await promise;
       if (res.data.success) {
         const user = res.data.user;
-        dispatch(setUser(user));
+        dispatch(setUser({ user, token: res.data.token }));
 
         if (user?.role === "admin") {
           navigate("/admin/dashboard", { replace: true });
