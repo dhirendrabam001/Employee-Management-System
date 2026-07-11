@@ -9,13 +9,39 @@ const connectDB = require("./config/connection");
 const app = express();
 
 // cors used
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173,https://myems-app.vercel.app")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+
+  const normalizedOrigin = origin.trim();
+
+  return (
+    allowedOrigins.includes(normalizedOrigin) ||
+    /^https:\/\/.+\.vercel\.app$/.test(normalizedOrigin) ||
+    /^https:\/\/.+\.netlify\.app$/.test(normalizedOrigin) ||
+    /^https:\/\/.+\.github\.io$/.test(normalizedOrigin) ||
+    /^https:\/\/.+\.onrender\.com$/.test(normalizedOrigin) ||
+    /^http:\/\/localhost(:\d+)?$/.test(normalizedOrigin) ||
+    /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(normalizedOrigin)
+  );
+};
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(null, false);
+    },
     credentials: true,
-  })
+  }),
 );
 
 // middleware

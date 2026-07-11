@@ -41,7 +41,7 @@ import EmployeePayslip from "./components/features/employee/pages/EmployeePaysli
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { authChecking } = useSelector((store) => store.auth);
+  const { authChecking, user } = useSelector((store) => store.auth);
   const { pageLoading } = useSelector((store) => store.loader);
   const showLoader =
     pageLoading || (authChecking && shouldShowRouteLoader(location.pathname));
@@ -72,6 +72,10 @@ function App() {
         if (res.status === 200) {
           dispatch(setUser(res.data.user));
         } else if (res.status === 401) {
+          if (user) {
+            return;
+          }
+
           dispatch(setUser(null));
 
           // Token expired → go to home page
@@ -89,7 +93,7 @@ function App() {
       }
     };
     fetchUser();
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   return (
     <>
