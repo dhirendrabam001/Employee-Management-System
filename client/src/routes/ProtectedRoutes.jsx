@@ -13,8 +13,11 @@ const ProtectedRoutes = ({ children, role }) => {
   const { user, authChecking } = useSelector((store) => store.auth);
 
   // Resolve user from Redux state first, fall back to localStorage.
-  // This covers the gap between component mount and Redux hydration.
+  // This covers the gap between component mount and Redux hydration,
+  // and the case where iPhone Safari blocks the session cookie so the
+  // /me call returns 401 before Password.jsx has dispatched setUser.
   const resolvedUser = user || getStoredUser();
+  const resolvedToken = window.localStorage.getItem("authToken");
 
   // If auth is still being checked AND we have no user anywhere, wait.
   // Never redirect to / while authChecking — that causes the iPhone flash.
@@ -22,8 +25,9 @@ const ProtectedRoutes = ({ children, role }) => {
     return null;
   }
 
-  // No user found anywhere — send to home
-  if (!resolvedUser) {
+  // No user found anywhere — send to home.
+  // Also verify the token exists; without it there's no valid session.
+  if (!resolvedUser || !resolvedToken) {
     return <Navigate to="/" replace />;
   }
 

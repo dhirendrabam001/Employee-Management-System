@@ -96,11 +96,16 @@ function App() {
             } else if (res.status === 401) {
               const msg = res.data?.message || "";
               if (msg.toLowerCase().includes("expired")) {
-                // Token genuinely expired — log out and notify
-                dispatch(setUser(null));
-                handleSessionExpired(msg);
+                // Token genuinely expired — only log out if localStorage still
+                // has the same session (not a new login that just completed)
+                const currentToken = window.localStorage.getItem("authToken");
+                if (currentToken === storedToken) {
+                  dispatch(setUser(null));
+                  handleSessionExpired(msg);
+                }
               }
-              // Any other 401 (e.g. cookie blocked) — keep local session alive
+              // Any other 401 (cookie blocked by iPhone Safari ITP, etc.)
+              // — keep local session alive. Do NOT call setUser(null).
             }
           })
           .catch(() => {
@@ -112,13 +117,33 @@ function App() {
         return;
       }
 
-      // No local session — must verify with the server
+      // No local session at mount time — must verify with the server.
+      // Re-check localStorage right before acting on the result, because a
+      // concurrent login (e.g. Password.jsx just finished) may have saved
+      // the user+token between our mount read and now (common on iPhone Safari
+      // where cookie is blocked and the timing is tight).
       try {
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
           headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : {},
           validateStatus: () => true,
         });
+
+        // Re-read localStorage — a login that completed while this request
+        // was in-flight (Render cold start can take 5-15s) must win.
+        const freshUser = (() => {
+          try {
+            return JSON.parse(window.localStorage.getItem("authUser") || "null");
+          } catch { return null; }
+        })();
+        const freshToken = window.localStorage.getItem("authToken");
+
+        if (freshUser && freshToken) {
+          // A login completed while we were waiting — trust it, don't overwrite.
+          dispatch(setUser(freshUser));
+          dispatch(setAuthChecking(false));
+          return;
+        }
 
         if (res.status === 200) {
           dispatch(setUser(res.data.user));
@@ -130,7 +155,18 @@ function App() {
           }
         }
       } catch {
-        dispatch(setUser(null));
+        // Network error — if a session appeared in localStorage meanwhile, keep it.
+        const freshUser = (() => {
+          try {
+            return JSON.parse(window.localStorage.getItem("authUser") || "null");
+          } catch { return null; }
+        })();
+        const freshToken = window.localStorage.getItem("authToken");
+        if (freshUser && freshToken) {
+          dispatch(setUser(freshUser));
+        } else {
+          dispatch(setUser(null));
+        }
       } finally {
         dispatch(setAuthChecking(false));
       }
