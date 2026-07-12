@@ -50,10 +50,13 @@ const EmployeePassword = () => {
         const user = res.data.user;
         dispatch(setUser({ user, token: res.data.token }));
 
+        // Use window.location.href instead of navigate() to force a clean
+        // page reload. This guarantees localStorage is fully written before
+        // ProtectedRoutes reads it — fixing the iPhone Safari race condition.
         if (user?.role === "admin") {
-          navigate("/admin/dashboard", { replace: true });
+          window.location.href = "/admin/dashboard";
         } else {
-          navigate("/employee/dashboard", { replace: true });
+          window.location.href = "/employee/dashboard";
         }
       }
     } catch (error) {
