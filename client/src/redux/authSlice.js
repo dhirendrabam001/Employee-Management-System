@@ -3,8 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const getStoredUser = () => {
   if (typeof window === "undefined") return null;
   try {
-    const storedUser = window.localStorage.getItem("authUser");
-    return storedUser ? JSON.parse(storedUser) : null;
+    // Try localStorage first, fall back to sessionStorage (for Safari Private Browsing
+    // which blocks localStorage entirely — writes silently fail or throw)
+    const raw =
+      window.localStorage.getItem("authUser") ||
+      window.sessionStorage.getItem("authUser");
+    return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
@@ -13,10 +17,17 @@ const getStoredUser = () => {
 const persistUser = (user) => {
   if (typeof window === "undefined") return;
   if (user) {
-    window.localStorage.setItem("authUser", JSON.stringify(user));
+    try {
+      window.localStorage.setItem("authUser", JSON.stringify(user));
+    } catch {
+      // localStorage blocked (e.g. Safari Private Browsing) — fall back to sessionStorage
+      try { window.sessionStorage.setItem("authUser", JSON.stringify(user)); } catch { /* ignore */ }
+    }
   } else {
-    window.localStorage.removeItem("authUser");
-    window.localStorage.removeItem("authToken");
+    try { window.localStorage.removeItem("authUser"); } catch { /* ignore */ }
+    try { window.localStorage.removeItem("authToken"); } catch { /* ignore */ }
+    try { window.sessionStorage.removeItem("authUser"); } catch { /* ignore */ }
+    try { window.sessionStorage.removeItem("authToken"); } catch { /* ignore */ }
   }
 };
 
@@ -42,9 +53,14 @@ const authSlice = createSlice({
       persistUser(user);
 
       if (action.payload?.token) {
-        window.localStorage.setItem("authToken", action.payload.token);
+        try {
+          window.localStorage.setItem("authToken", action.payload.token);
+        } catch {
+          try { window.sessionStorage.setItem("authToken", action.payload.token); } catch { /* ignore */ }
+        }
       } else if (!user) {
-        window.localStorage.removeItem("authToken");
+        try { window.localStorage.removeItem("authToken"); } catch { /* ignore */ }
+        try { window.sessionStorage.removeItem("authToken"); } catch { /* ignore */ }
       }
     },
     setLoading: (state, action) => {

@@ -67,8 +67,12 @@ function App() {
       // before this effect runs on the dashboard page.
       if (SKIP_LOADER_ROUTES.includes(location.pathname)) {
         const storedUser = (() => {
-          try { return JSON.parse(window.localStorage.getItem("authUser") || "null"); }
-          catch { return null; }
+          try {
+            const raw =
+              window.localStorage.getItem("authUser") ||
+              window.sessionStorage.getItem("authUser");
+            return raw ? JSON.parse(raw) : null;
+          } catch { return null; }
         })();
         if (storedUser) dispatch(setUser(storedUser));
         dispatch(setAuthChecking(false));
@@ -80,10 +84,16 @@ function App() {
       // If data is there, trust it immediately and show the page.
       // Then silently verify with the server in the background.
       const storedUser = (() => {
-        try { return JSON.parse(window.localStorage.getItem("authUser") || "null"); }
-        catch { return null; }
+        try {
+          const raw =
+            window.localStorage.getItem("authUser") ||
+            window.sessionStorage.getItem("authUser");
+          return raw ? JSON.parse(raw) : null;
+        } catch { return null; }
       })();
-      const storedToken = window.localStorage.getItem("authToken");
+      const storedToken =
+        window.localStorage.getItem("authToken") ||
+        window.sessionStorage.getItem("authToken");
 
       if (storedUser && storedToken) {
         // Trust local session — set user and unblock the UI immediately
@@ -105,7 +115,9 @@ function App() {
               const msg = (res.data?.message || "").toLowerCase();
               if (msg.includes("expired")) {
                 // Only log out if the same token is still in storage
-                const currentToken = window.localStorage.getItem("authToken");
+                const currentToken =
+                  window.localStorage.getItem("authToken") ||
+                  window.sessionStorage.getItem("authToken");
                 if (currentToken === storedToken) {
                   dispatch(setUser(null));
                   handleSessionExpired(res.data.message);

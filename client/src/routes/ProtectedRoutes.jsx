@@ -15,8 +15,14 @@ import { Navigate } from "react-router-dom";
 
 const getLocalSession = () => {
   try {
-    const user = JSON.parse(window.localStorage.getItem("authUser") || "null");
-    const token = window.localStorage.getItem("authToken");
+    // Check localStorage first, then sessionStorage (Safari Private Browsing fallback)
+    const rawUser =
+      window.localStorage.getItem("authUser") ||
+      window.sessionStorage.getItem("authUser");
+    const token =
+      window.localStorage.getItem("authToken") ||
+      window.sessionStorage.getItem("authToken");
+    const user = rawUser ? JSON.parse(rawUser) : null;
     if (user && token) return { user, token };
     return null;
   } catch {
@@ -30,7 +36,12 @@ const ProtectedRoutes = ({ children, role }) => {
   // Prefer Redux state (already hydrated from localStorage in authSlice init).
   // Fall back to a direct localStorage read as a safety net.
   const session = reduxUser
-    ? { user: reduxUser, token: window.localStorage.getItem("authToken") }
+    ? {
+        user: reduxUser,
+        token:
+          window.localStorage.getItem("authToken") ||
+          window.sessionStorage.getItem("authToken"),
+      }
     : getLocalSession();
 
   // Still checking AND no session anywhere → show blank (don't redirect yet)
