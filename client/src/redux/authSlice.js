@@ -1,35 +1,83 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// ─── In-memory session store ────────────────────────────────────────────────
+// This is the primary store for the auth session. It works in ALL browsers
+// including Safari Private Browsing (which blocks localStorage/sessionStorage).
+// It survives React re-renders and route changes, but resets on page reload —
+// which is fine because we only use window.location.href after logout.
+let memoryUser = null;
+let memoryToken = null;
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const safeLocalGet = (key) => {
+  try { return window.localStorage.getItem(key); } catch { return null; }
+};
+
+const safeLocalSet = (key, value) => {
+  try { window.localStorage.setItem(key, value); } catch { /* blocked in private browsing */ }
+};
+
+const safeLocalRemove = (key) => {
+  try { window.localStorage.removeItem(key); } catch { /* ignore */ }
+};
+
+const safeSessionGet = (key) => {
+  try { return window.sessionStorage.getItem(key); } catch { return null; }
+};
+
+const safeSessionSet = (key, value) => {
+  try { window.sessionStorage.setItem(key, value); } catch { /* ignore */ }
+};
+
+const safeSessionRemove = (key) => {
+  try { window.sessionStorage.removeItem(key); } catch { /* ignore */ }
+};
+
+// Read user from any available storage (localStorage → sessionStorage → null)
 const getStoredUser = () => {
   if (typeof window === "undefined") return null;
+  // Check in-memory first (fastest, works in private browsing after first load)
+  if (memoryUser) return memoryUser;
   try {
-    // Try localStorage first, fall back to sessionStorage (for Safari Private Browsing
-    // which blocks localStorage entirely — writes silently fail or throw)
-    const raw =
-      window.localStorage.getItem("authUser") ||
-      window.sessionStorage.getItem("authUser");
+    const raw = safeLocalGet("authUser") || safeSessionGet("authUser");
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 };
 
+export const getStoredToken = () => {
+  if (memoryToken) return memoryToken;
+  return safeLocalGet("authToken") || safeSessionGet("authToken") || null;
+};
+
+// Persist user to all available storages
 const persistUser = (user) => {
   if (typeof window === "undefined") return;
+  memoryUser = user || null;
   if (user) {
-    try {
-      window.localStorage.setItem("authUser", JSON.stringify(user));
-    } catch {
-      // localStorage blocked (e.g. Safari Private Browsing) — fall back to sessionStorage
-      try { window.sessionStorage.setItem("authUser", JSON.stringify(user)); } catch { /* ignore */ }
-    }
+    const json = JSON.stringify(user);
+    safeLocalSet("authUser", json);
+    safeSessionSet("authUser", json); // belt-and-suspenders for private browsing
   } else {
-    try { window.localStorage.removeItem("authUser"); } catch { /* ignore */ }
-    try { window.localStorage.removeItem("authToken"); } catch { /* ignore */ }
-    try { window.sessionStorage.removeItem("authUser"); } catch { /* ignore */ }
-    try { window.sessionStorage.removeItem("authToken"); } catch { /* ignore */ }
+    safeLocalRemove("authUser");
+    safeLocalRemove("authToken");
+    safeSessionRemove("authUser");
+    safeSessionRemove("authToken");
+    memoryToken = null;
   }
 };
+
+const persistToken = (token) => {
+  memoryToken = token || null;
+  if (token) {
+    safeLocalSet("authToken", token);
+    safeSessionSet("authToken", token); // belt-and-suspenders for private browsing
+  }
+};
+
+// ─── Slice ───────────────────────────────────────────────────────────────────
 
 const storedUser = getStoredUser();
 
@@ -37,9 +85,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     loading: false,
-    // If we already have a user in localStorage, no need to show a
-    // "checking" state — the user is already known. This prevents the
-    // flash-redirect to / on page load / route navigation on mobile.
+    // authChecking: false when we already have a user — no need to wait.
     authChecking: !storedUser,
     user: storedUser,
     role: storedUser?.role ?? null,
@@ -53,14 +99,9 @@ const authSlice = createSlice({
       persistUser(user);
 
       if (action.payload?.token) {
-        try {
-          window.localStorage.setItem("authToken", action.payload.token);
-        } catch {
-          try { window.sessionStorage.setItem("authToken", action.payload.token); } catch { /* ignore */ }
-        }
+        persistToken(action.payload.token);
       } else if (!user) {
-        try { window.localStorage.removeItem("authToken"); } catch { /* ignore */ }
-        try { window.sessionStorage.removeItem("authToken"); } catch { /* ignore */ }
+        persistToken(null);
       }
     },
     setLoading: (state, action) => {

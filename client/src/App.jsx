@@ -19,7 +19,7 @@ import ProtectedRoutes from "./routes/ProtectedRoutes";
 import { useEffect, useLayoutEffect } from "react";
 import axios from "axios";
 import { USER_API_END_POINT } from "./utils/constantUrl";
-import { setAuthChecking, setUser } from "./redux/authSlice";
+import { setAuthChecking, setUser, getStoredToken } from "./redux/authSlice";
 import { setPageLoading } from "./redux/loaderSlice";
 import { handleSessionExpired } from "./utils/sessionExpired";
 import { shouldShowRouteLoader, SKIP_LOADER_ROUTES } from "./utils/loaderRoutes";
@@ -29,7 +29,6 @@ import Leave from "./components/features/admin/pages/Leave";
 import Payslips from "./components/features/admin/pages/Payslips";
 import PrintPayslip from "./components/features/admin/components/PrintPayslip";
 import Settings from "./components/features/admin/pages/Settings";
-
 import CubeLoader from "./components/common/Loader/CubeLoader";
 
 // employee pages
@@ -40,7 +39,7 @@ import EmployeePayslip from "./components/features/employee/pages/EmployeePaysli
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { authChecking } = useSelector((store) => store.auth);
+  const { authChecking, user } = useSelector((store) => store.auth);
   const { pageLoading } = useSelector((store) => store.loader);
   const showLoader =
     pageLoading || (authChecking && shouldShowRouteLoader(location.pathname));
@@ -60,47 +59,25 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      // ── Auth pages (login, password, signup, home):
-      // No /me call needed. Just read localStorage and mark auth done.
-      // Password.jsx now uses window.location.href so the dashboard
-      // always loads fresh — localStorage is guaranteed to be populated
-      // before this effect runs on the dashboard page.
+      // ── On auth/public pages: no /me call needed.
+      // The user is currently logging in. Just check if there's already
+      // a session (returning user) and mark auth as resolved.
       if (SKIP_LOADER_ROUTES.includes(location.pathname)) {
-        const storedUser = (() => {
-          try {
-            const raw =
-              window.localStorage.getItem("authUser") ||
-              window.sessionStorage.getItem("authUser");
-            return raw ? JSON.parse(raw) : null;
-          } catch { return null; }
-        })();
-        if (storedUser) dispatch(setUser(storedUser));
+        // user is already hydrated from in-memory/localStorage in authSlice init
         dispatch(setAuthChecking(false));
         return;
       }
 
-      // ── Protected pages:
-      // localStorage is the single source of truth.
-      // If data is there, trust it immediately and show the page.
-      // Then silently verify with the server in the background.
-      const storedUser = (() => {
-        try {
-          const raw =
-            window.localStorage.getItem("authUser") ||
-            window.sessionStorage.getItem("authUser");
-          return raw ? JSON.parse(raw) : null;
-        } catch { return null; }
-      })();
-      const storedToken =
-        window.localStorage.getItem("authToken") ||
-        window.sessionStorage.getItem("authToken");
+      // ── On protected pages: check in-memory → localStorage → sessionStorage
+      // getStoredToken() covers all three sources including Safari Private Browsing.
+      // user is already set in Redux from authSlice initial state if it existed.
+      const storedToken = getStoredToken();
 
-      if (storedUser && storedToken) {
-        // Trust local session — set user and unblock the UI immediately
-        dispatch(setUser(storedUser));
+      if (user && storedToken) {
+        // Already have a valid session in Redux — just mark auth done
+        // and silently verify with the server
         dispatch(setAuthChecking(false));
 
-        // Background verification: only clear session on a real token expiry
         axios
           .get(`${USER_API_END_POINT}/me`, {
             withCredentials: true,
@@ -109,32 +86,28 @@ function App() {
           })
           .then((res) => {
             if (res.status === 200) {
-              // Refresh user data silently
               dispatch(setUser(res.data.user));
             } else if (res.status === 401) {
               const msg = (res.data?.message || "").toLowerCase();
               if (msg.includes("expired")) {
-                // Only log out if the same token is still in storage
-                const currentToken =
-                  window.localStorage.getItem("authToken") ||
-                  window.sessionStorage.getItem("authToken");
-                if (currentToken === storedToken) {
+                // Only clear if the same token is still active
+                if (getStoredToken() === storedToken) {
                   dispatch(setUser(null));
                   handleSessionExpired(res.data.message);
                 }
               }
-              // Other 401s (Safari ITP cookie block, etc.) → keep session alive
+              // Other 401s (cookie blocked by ITP etc.) → keep session alive
             }
           })
           .catch(() => {
-            // Network error / Render cold start → keep local session alive
+            // Render cold start / offline → keep local session alive
           });
 
         return;
       }
 
-      // ── No local session: user navigated directly to a protected URL
-      // without being logged in. Ask the server.
+      // ── No session at all: ask the server (cookie may exist even if
+      // localStorage is empty — e.g. user on a different browser)
       try {
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
