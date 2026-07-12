@@ -22,7 +22,7 @@ import { USER_API_END_POINT } from "./utils/constantUrl";
 import { setAuthChecking, setUser } from "./redux/authSlice";
 import { setPageLoading } from "./redux/loaderSlice";
 import { handleSessionExpired } from "./utils/sessionExpired";
-import { shouldShowRouteLoader } from "./utils/loaderRoutes";
+import { shouldShowRouteLoader, SKIP_LOADER_ROUTES } from "./utils/loaderRoutes";
 import Dashboard from "./components/features/admin/pages/Dashboard";
 import Employees from "./components/features/admin/pages/Employees";
 import Leave from "./components/features/admin/pages/Leave";
@@ -30,7 +30,6 @@ import Payslips from "./components/features/admin/pages/Payslips";
 import PrintPayslip from "./components/features/admin/components/PrintPayslip";
 import Settings from "./components/features/admin/pages/Settings";
 
-// import PageLoader from "./components/common/Loader/PageLoader";
 import CubeLoader from "./components/common/Loader/CubeLoader";
 
 // employee pages
@@ -52,37 +51,58 @@ function App() {
     }
   }, [dispatch, location.pathname]);
 
-  // If the current route is a skip-route (auth/home pages), hide the loader immediately
   useEffect(() => {
     if (!shouldShowRouteLoader(location.pathname)) {
       dispatch(setPageLoading(false));
     }
-    // keep intentional empty dependency; reactively handle pathname above
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const storedUser = (() => {
-        try {
-          return JSON.parse(
-            window.localStorage.getItem("authUser") || "null",
-          );
-        } catch {
-          return null;
-        }
-      })();
-      const storedToken = window.localStorage.getItem("authToken");
+      // ─── STEP 1: If the user is on an auth/public page right now,
+      // we do NOT need to call /me at all. They are in the middle of
+      // logging in (or are on the home page). Just read localStorage
+      // and resolve authChecking immediately so nothing blocks them.
+      //
+      // This is the KEY fix for iPhone Safari ITP: on the /password
+      // page, the old code fired GET /me with no cookie and no token
+      // (because the user hadn't logged in yet), got a 401, and then
+      // by the time it tried to re-check localStorage the race was
+      // already lost on iOS, causing setUser(null) → redirect to /.
+      const isAuthPage = SKIP_LOADER_ROUTES.includes(location.pathname);
 
-      // If localStorage already has a valid user+token, trust it immediately.
-      // Skip the /me network call — this prevents Render's cold-start (5-15s)
-      // from blocking the dashboard on mobile/iPhone Safari where cookies are
-      // also blocked. The /me call only matters for server-side token expiry
-      // detection, which we handle below only when there is NO local session.
+      const readLocalStorage = () => {
+        try {
+          const u = JSON.parse(window.localStorage.getItem("authUser") || "null");
+          const t = window.localStorage.getItem("authToken");
+          return { user: u, token: t };
+        } catch {
+          return { user: null, token: null };
+        }
+      };
+
+      if (isAuthPage) {
+        // On auth pages: trust localStorage if it has a session, otherwise
+        // just mark auth as done. Never call /me here.
+        const { user: localUser } = readLocalStorage();
+        if (localUser) {
+          dispatch(setUser(localUser));
+        }
+        dispatch(setAuthChecking(false));
+        return;
+      }
+
+      // ─── STEP 2: We are on a protected page. Try localStorage first.
+      const { user: storedUser, token: storedToken } = readLocalStorage();
+
       if (storedUser && storedToken) {
+        // Immediately trust the local session so the page renders now.
         dispatch(setUser(storedUser));
-        // Still verify in the background so we can catch genuine expiry,
-        // but do NOT block rendering or change authChecking
+        dispatch(setAuthChecking(false));
+
+        // Verify in the background with the Bearer token (cookie is
+        // unreliable on iPhone). Only clear on a definitive "expired".
         axios
           .get(`${USER_API_END_POINT}/me`, {
             withCredentials: true,
@@ -91,59 +111,35 @@ function App() {
           })
           .then((res) => {
             if (res.status === 200) {
-              // Refresh with latest server data (name/email may have changed)
               dispatch(setUser(res.data.user));
             } else if (res.status === 401) {
-              const msg = res.data?.message || "";
-              if (msg.toLowerCase().includes("expired")) {
-                // Token genuinely expired — only log out if localStorage still
-                // has the same session (not a new login that just completed)
+              const msg = (res.data?.message || "").toLowerCase();
+              if (msg.includes("expired")) {
+                // Confirm the same token is still in storage (not a new login)
                 const currentToken = window.localStorage.getItem("authToken");
                 if (currentToken === storedToken) {
                   dispatch(setUser(null));
-                  handleSessionExpired(msg);
+                  handleSessionExpired(res.data.message);
                 }
               }
-              // Any other 401 (cookie blocked by iPhone Safari ITP, etc.)
-              // — keep local session alive. Do NOT call setUser(null).
+              // Any other 401 (network glitch, ITP cookie block, etc.) → keep session
             }
           })
           .catch(() => {
-            // Network error / Render cold start — keep local session, try again later
+            // Render cold-start / offline → keep local session alive
           });
 
-        // Auth is already resolved from localStorage — no need to set authChecking
-        dispatch(setAuthChecking(false));
         return;
       }
 
-      // No local session at mount time — must verify with the server.
-      // Re-check localStorage right before acting on the result, because a
-      // concurrent login (e.g. Password.jsx just finished) may have saved
-      // the user+token between our mount read and now (common on iPhone Safari
-      // where cookie is blocked and the timing is tight).
+      // ─── STEP 3: No local session at all — must ask the server.
+      // This only runs when a user lands directly on a protected URL
+      // without any localStorage data (e.g. they cleared storage).
       try {
         const res = await axios.get(`${USER_API_END_POINT}/me`, {
           withCredentials: true,
-          headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : {},
           validateStatus: () => true,
         });
-
-        // Re-read localStorage — a login that completed while this request
-        // was in-flight (Render cold start can take 5-15s) must win.
-        const freshUser = (() => {
-          try {
-            return JSON.parse(window.localStorage.getItem("authUser") || "null");
-          } catch { return null; }
-        })();
-        const freshToken = window.localStorage.getItem("authToken");
-
-        if (freshUser && freshToken) {
-          // A login completed while we were waiting — trust it, don't overwrite.
-          dispatch(setUser(freshUser));
-          dispatch(setAuthChecking(false));
-          return;
-        }
 
         if (res.status === 200) {
           dispatch(setUser(res.data.user));
@@ -155,22 +151,12 @@ function App() {
           }
         }
       } catch {
-        // Network error — if a session appeared in localStorage meanwhile, keep it.
-        const freshUser = (() => {
-          try {
-            return JSON.parse(window.localStorage.getItem("authUser") || "null");
-          } catch { return null; }
-        })();
-        const freshToken = window.localStorage.getItem("authToken");
-        if (freshUser && freshToken) {
-          dispatch(setUser(freshUser));
-        } else {
-          dispatch(setUser(null));
-        }
+        dispatch(setUser(null));
       } finally {
         dispatch(setAuthChecking(false));
       }
     };
+
     fetchUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);

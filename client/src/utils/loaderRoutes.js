@@ -1,3 +1,4 @@
+// Auth and public pages — no loader, no /me call needed
 export const SKIP_LOADER_ROUTES = [
   "/",
   "/admin/login",
